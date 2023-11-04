@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
 from handler.PartHandler import PartHandler
+from handler.UserHandler import UserHandler
 app = Flask(__name__)
 
 CORS(app)
@@ -25,6 +26,14 @@ def getPart(p_id):
         return PartHandler().deletePart(p_id)
     else: #catches any other methods
         return jsonify(Error="Method not allowed."), 405
+
+
+@app.route('/wUser', methods=['GET', 'POST'])
+def getAllUsers():
+    if request.method == 'POST':
+        return UserHandler().addUser(request.args)
+    else:
+        return UserHandler().getAllUsers()
 
 if __name__ == '__main__':
     app.run(debug=True)
