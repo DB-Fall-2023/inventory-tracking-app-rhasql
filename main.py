@@ -35,6 +35,17 @@ def getAllUsers():
     else:
         return UserHandler().getAllUsers()
 
+@app.route('/wUser/<int:u_id>', methods = ['GET', 'PUT', 'DELETE'])
+def getUserById(u_id):
+    if request.method == 'GET':
+        return UserHandler().getUserById(u_id)
+    elif request.method == 'PUT':
+        return UserHandler().updateUser(u_id, request.args)
+    elif request.method == 'DELETE':
+        return UserHandler().deleteUser(u_id)
+    else:
+        jsonify(Error = "Method not allowed."), 405
+
 if __name__ == '__main__':
     app.run(debug=True)
 
