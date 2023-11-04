@@ -7,7 +7,7 @@ Team members:
 1. Arnaldo J. Espinel Duran - arnaldo.espinel@upr.edu
 2. Luis D. Gonzalez Sanchez - luis.gonzales119@upr.edu
 3. Mateo I. Muñiz Velázquez - mateo.muniz@upr.edu
-4. Adrian Irizarry Negrón - adrian.irrizarry@upr.edu
+4. Adrian Irizarry Negrón - adrian.irizarry@upr.edu
 5. Axel J. Perez Rodríguez - axel.perez2@upr.edu
 
 CREDENTIALS
