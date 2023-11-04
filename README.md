@@ -9,3 +9,12 @@ Team members:
 3. Mateo I. Muñiz Velázquez - mateo.muniz@upr.edu
 4. Adrian Irizarry Negrón - adrian.irrizarry@upr.edu
 5. Axel J. Perez Rodríguez - axel.perez2@upr.edu
+
+CREDENTIALS
+Host: ec2-18-211-172-50.compute-1.amazonaws.com
+Database: d50qfjb63nlom1
+User: vbccpykujiisah
+Port: 5432
+Password: 3e4854dbe0ce20aad8ad4cf6cd8dad1b9e2382d39f59509970541a10f30c8908
+URI: postgres://vbccpykujiisah:3e4854dbe0ce20aad8ad4cf6cd8dad1b9e2382d39f59509970541a10f30c8908@ec2-18-211-172-50.compute-1.amazonaws.com:5432/d50qfjb63nlom1
+Heroku CLI: heroku pg:psql postgresql-pointy-19807 --app partapp
