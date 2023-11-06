@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
 from handler.PartHandler import PartHandler
 from handler.UserHandler import UserHandler
+from handler.RacksHandler import RacksHandler
 app = Flask(__name__)
 
 CORS(app)
@@ -45,6 +46,25 @@ def getUserById(u_id):
         return UserHandler().deleteUser(u_id)
     else:
         jsonify(Error = "Method not allowed."), 405
+
+
+@app.route('/racks', methods=['GET', 'POST'])
+def getAllRacks():
+    if request.method == 'POST':
+        return RacksHandler().insertRack(request.args)
+    else:
+        return RacksHandler().getAllRacks()
+
+@app.route('/racks/<int:u_id>', methods = ['GET', 'PUT', 'DELETE'])
+def getRacksById(r_id):
+    if request.method == 'GET':
+        return RacksHandler().getRacksById(r_id)
+    elif request.method == 'PUT':
+        return RacksHandler().updateRack(r_id, request.args)
+    elif request.method == 'DELETE':
+        return RacksHandler().deleteRack(r_id)
+    else:
+        jsonify(Error = "Method is not allowed."), 405
 
 if __name__ == '__main__':
     app.run(debug=True)
