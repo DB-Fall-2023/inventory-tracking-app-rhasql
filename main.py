@@ -48,6 +48,7 @@ def getUserById(u_id):
         jsonify(Error = "Method not allowed."), 405
 
 
+
 @app.route('/racks', methods=['GET', 'POST'])
 def getAllRacks():
     if request.method == 'POST':
@@ -65,6 +66,33 @@ def getRacksById(r_id):
         return RacksHandler().deleteRack(r_id)
     else:
         jsonify(Error = "Method is not allowed."), 405
+
+#Routes for Supplier table
+@app.route('/supplier', methods=['GET', 'POST'])
+def getAllSuppliers():
+    if request.method == 'GET':
+        return SupplierHandler().getAllSuppliers()
+
+    elif request.method == 'POST':
+        data = request.json
+        return SupplierHandler().insertSupplier(data)
+
+    else:
+        return jsonify("Not supported"), 405
+
+
+@app.route('/supplier/<int:s_id>', methods=['GET', 'PUT', 'DELETE'])
+def searchSupplierById(s_id):
+    if request.method == 'GET':
+        return SupplierHandler().searchById(s_id)
+    elif request.method == 'DELETE':
+        return SupplierHandler().deleteById(s_id)
+    elif request.method == 'PUT':
+        data = request.json
+        return SupplierHandler().updateById(s_id, data)
+    else:
+        return jsonify("Not supported"), 405
+
 
 if __name__ == '__main__':
     app.run(debug=True)
