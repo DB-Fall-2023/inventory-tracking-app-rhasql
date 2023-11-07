@@ -1,5 +1,5 @@
 from flask import jsonify
-from dao.supplier import SuppliersDAO
+from DAO.supplier import SuppliersDAO
 
 class SupplierHandler:
 
@@ -31,14 +31,14 @@ class SupplierHandler:
             return jsonify("Not Found"), 404
 
     def insertSupplier(self, data):
-        name = data['Name']
-        city = data['City']
-        phone = data['Phone']
+        name = data['s_name']
+        city = data['s_city']
+        phone = data['s_phone']
 
         if name and city and phone:
             dao = SuppliersDAO()
             sid = dao.insertSupplier(name, city, phone)
-            data['Id'] = sid
+            data['s_id'] = sid
             return jsonify(data), 201
 
         else:

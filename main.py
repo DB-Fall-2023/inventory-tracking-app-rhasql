@@ -3,6 +3,7 @@ from flask_cors import CORS, cross_origin
 from handler.PartHandler import PartHandler
 from handler.UserHandler import UserHandler
 from handler.RacksHandler import RacksHandler
+from handler.supplier import SupplierHandler
 app = Flask(__name__)
 
 CORS(app)
@@ -56,7 +57,7 @@ def getAllRacks():
     else:
         return RacksHandler().getAllRacks()
 
-@app.route('/racks/<int:u_id>', methods = ['GET', 'PUT', 'DELETE'])
+@app.route('/racks/<int:r_id>', methods = ['GET', 'PUT', 'DELETE'])
 def getRacksById(r_id):
     if request.method == 'GET':
         return RacksHandler().getRacksById(r_id)
