@@ -4,6 +4,7 @@ from handler.PartHandler import PartHandler
 from handler.UserHandler import UserHandler
 from handler.RacksHandler import RacksHandler
 from handler.supplier import SupplierHandler
+from handler.SuppliesHandler import SuppliesHandler
 app = Flask(__name__)
 
 CORS(app)
@@ -93,6 +94,22 @@ def searchSupplierById(s_id):
         return SupplierHandler().updateById(s_id, data)
     else:
         return jsonify("Not supported"), 405
+@app.route('/supplies', methods=['GET','POST'])
+def getAllSupplies():
+    if request.method == 'POST':
+        return SuppliesHandler().addSupplies(request.json)
+    elif request.method == 'GET':
+        return SuppliesHandler().getAllSupplies()
+    else:
+        return jsonify("Not supported"), 405
+@app.route('/supplies/<int:p_id>,<int:s_id>',methods=['GET','PUT', 'DELETE'])
+def getSupplies(p_id,s_id):
+    if request.method == 'GET':
+        return SuppliesHandler().getSupplies(p_id,s_id)
+    if request.method == 'PUT':
+        return SuppliesHandler().updateSupplies(p_id,s_id, request.json)
+    if request.method == 'DELETE':
+        return SuppliesHandler().deleteSupplies(p_id,s_id)
 
 
 if __name__ == '__main__':
