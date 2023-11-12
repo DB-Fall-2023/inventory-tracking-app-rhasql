@@ -37,7 +37,7 @@ class WarehouseHandler:
         w_location = data['w_location']
 
         if w_name and w_location:
-            dao.warehouseDAO()
+            dao = warehouseDAO()
             w_id = dao.insertWarehouse(w_name, w_location)
             data['w_id'] = w_id
             return jsonify(data), 201

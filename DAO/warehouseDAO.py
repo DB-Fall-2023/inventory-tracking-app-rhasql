@@ -32,7 +32,7 @@ class warehouseDAO:
 
     def insertWarehouse(self, w_name, w_location):
         cursor = self.conn.cursor()
-        query = "insert into warehouse(w_name, w_location) values (%s, %s, %s, %s) returning w_id"
+        query = "insert into warehouse(w_name, w_location) values (%s, %s) returning w_id"
         cursor.execute(query, (w_name, w_location,))
         w_id = cursor.fetchone()[0]
         self.conn.commit()

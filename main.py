@@ -17,7 +17,7 @@ def greeting():
 @app.route('/parts', methods=['GET', 'POST'])
 def getAllParts():
     if request.method == 'POST': #adds a part
-        return PartHandler().addPart(request.args) #I think request.args is the solution? worked so far
+        return PartHandler().addPart(request.json) #I think request.args is the solution? worked so far
     else:
         return PartHandler().getAllParts() #returns all parts
 @app.route('/parts/<int:p_id>', methods=['GET', 'PUT', 'DELETE']) #Get, Update, and Delete parts
@@ -25,7 +25,7 @@ def getPart(p_id):
     if request.method == 'GET': #returns part by id
         return PartHandler().getPart(p_id)
     elif request.method == 'PUT': #updates part by id
-        return PartHandler().updatePart(p_id, request.args)
+        return PartHandler().updatePart(p_id, request.json)
     elif request.method == 'DELETE': #deletes part by id
         return PartHandler().deletePart(p_id)
     else: #catches any other methods
@@ -35,7 +35,7 @@ def getPart(p_id):
 @app.route('/wUser', methods=['GET', 'POST'])
 def getAllUsers():
     if request.method == 'POST':
-        return UserHandler().addUser(request.args)
+        return UserHandler().addUser(request.json)
     else:
         return UserHandler().getAllUsers()
 
@@ -44,7 +44,7 @@ def getUserById(u_id):
     if request.method == 'GET':
         return UserHandler().getUserById(u_id)
     elif request.method == 'PUT':
-        return UserHandler().updateUser(u_id, request.args)
+        return UserHandler().updateUser(u_id, request.json)
     elif request.method == 'DELETE':
         return UserHandler().deleteUser(u_id)
     else:
@@ -55,7 +55,7 @@ def getUserById(u_id):
 @app.route('/racks', methods=['GET', 'POST'])
 def getAllRacks():
     if request.method == 'POST':
-        return RacksHandler().insertRack(request.args)
+        return RacksHandler().insertRack(request.json)
     else:
         return RacksHandler().getAllRacks()
 
@@ -64,7 +64,7 @@ def getRacksById(r_id):
     if request.method == 'GET':
         return RacksHandler().getRacksById(r_id)
     elif request.method == 'PUT':
-        return RacksHandler().updateRack(r_id, request.args)
+        return RacksHandler().updateRack(r_id, request.json)
     elif request.method == 'DELETE':
         return RacksHandler().deleteRack(r_id)
     else:
