@@ -5,6 +5,7 @@ from handler.UserHandler import UserHandler
 from handler.RacksHandler import RacksHandler
 from handler.supplier import SupplierHandler
 from handler.SuppliesHandler import SuppliesHandler
+from handler.WarehouseHandler import WarehouseHandler
 app = Flask(__name__)
 
 CORS(app)
@@ -111,6 +112,23 @@ def getSupplies(p_id,s_id):
     if request.method == 'DELETE':
         return SuppliesHandler().deleteSupplies(p_id,s_id)
 
+@app.route('/warehouse', methods=['GET', 'POST'])
+def getAllWarehouses():
+    if request.method == 'POST':
+        return WarehouseHandler().insertWarehouse(request.json)
+    elif request.method == 'GET':
+        return WarehouseHandler().getAllWarehouses()
+    else:
+        return jsonify("Not supported"), 405
+
+@app.route('/warehouse/<int:w_id>', methods = ['GET', 'PUT', 'DELETE'])
+def getWarehouseById(w_id):
+    if request.method == 'GET':
+        return WarehouseHandler().getWarehouseById(w_id)
+    elif request.method == 'PUT':
+        return WarehouseHandler().updateWarehouseById(w_id, request.json)
+    elif request.method == 'DELETE':
+        return WarehouseHandler().deleteByWarehouseId(w_id)
 
 if __name__ == '__main__':
     app.run(debug=True)
