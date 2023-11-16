@@ -55,6 +55,7 @@ class RacksHandler:
             return jsonify(racks = Racks)
     
     def insertRack(self, data):
+        dao = RacksDao()
         pDAO = PartsDAO()
         wDAO = warehouseDAO()
         if not pDAO.getPart(data['p_id']):
@@ -63,6 +64,8 @@ class RacksHandler:
             return jsonify(Error="Warehouse doesn't exist"), 402
         if data['r_amount'] > data['r_capacity']:
             return jsonify(Error="Cannot add amount greater than capacity"), 402
+        if dao.rackExists(data['p_id'], data['w_id']):
+            return jsonify(Error="Rack already exists in warehouse"), 402
         r_capacity = data['r_capacity']
         r_amount = data['r_amount']
         p_id = data['p_id']
@@ -71,7 +74,7 @@ class RacksHandler:
         #r_partsinstock = data['r_partsinstock']
 
         if p_id and w_id and r_amount and r_capacity:
-            dao = RacksDao()
+            #dao = RacksDao()
             r_id = dao.insertRack(r_amount, w_id, p_id, r_capacity)
             result = self.buildRacksAttributes(r_id, r_amount, w_id, p_id, r_capacity)
             return jsonify(racks = result), 201

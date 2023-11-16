@@ -49,3 +49,10 @@ class RacksDao:
         cursor.execute(query, (r_id,))
         self.conn.commit()
         return r_id
+
+    def rackExists(self, p_id, w_id):
+        cursor = self.conn.cursor()
+        query = 'Select r_id From racks where p_id = %s and w_id = %s'
+        cursor.execute(query, (p_id,w_id,))
+        result = cursor.fetchone()
+        return result
