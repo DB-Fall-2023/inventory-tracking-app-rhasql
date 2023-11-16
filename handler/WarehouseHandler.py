@@ -1,5 +1,6 @@
 from flask import jsonify
 from DAO.warehouseDAO import warehouseDAO
+from handler.RacksHandler import RacksHandler
 
 class WarehouseHandler:
     def build_warehouse(self, t):
@@ -67,6 +68,26 @@ class WarehouseHandler:
             return jsonify("OK"), 200
         else:
             return jsonify(Error = "Warehouse not found"), 404
-            
+    def getLowStock(self, w_id):
+        dao = warehouseDAO()
+        if not dao.getWarehouseById(w_id):
+            return jsonify(Error = "Warehouse doesn't exist"), 404
+        dtuples = dao.getLowStock(w_id)
+        result = []
+        for x in dtuples:
+            result.append(RacksHandler().build_racks(x))
+        return jsonify(result)
+
+    def getExpensiveRacks(self, w_id):
+        dao = warehouseDAO()
+        if not dao.getWarehouseById(w_id):
+            return jsonify(Error = "Warehouse doesn't exist"), 404
+        dtuples = dao.getExpensive(w_id)
+        result = []
+        for x in dtuples:
+            result.append(RacksHandler().build_expensive_racks(x))
+        return jsonify(result)
+
+
 
        

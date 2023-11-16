@@ -53,3 +53,23 @@ class warehouseDAO:
         count = cursor.rowcount
         self.conn.commit()
         return count
+    def getLowStock(self,w_id):
+        cursor = self.conn.cursor()
+        query = "Select r_id, r_amount, w_id, p_id, r_capacity from racks natural inner join warehouse where w_id=%s and r_amount < r_capacity*0.25 order by r_amount limit 5 "
+        cursor.execute(query,(w_id,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+    def getExpensive(self,w_id):
+        cursor = self.conn.cursor()
+        query = ("Select r_id, r_amount, w_id, p_id, r_capacity, sum(r_amount*p_price) as total_price "
+                 "from racks natural inner join warehouse natural inner join parts "
+                 "where w_id=%s group by r_id, r_amount, w_id, p_id, r_capacity "
+                 "order by total_price desc "
+                 "limit 5 ")
+        cursor.execute(query,(w_id,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result

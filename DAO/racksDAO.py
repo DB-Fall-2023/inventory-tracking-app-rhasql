@@ -14,7 +14,7 @@ class RacksDao:
 
     def getAllRacks(self):
         cursor = self.conn.cursor()
-        query = 'select r_id, r_capacity, r_fullCost, r_partsinstock from racks'
+        query = 'select r_id,r_amount , w_id, p_id, r_capacity from racks'
         cursor.execute(query)
         result = []
         for row in cursor:
@@ -23,23 +23,23 @@ class RacksDao:
 
     def getRacksById(self, r_id):
         cursor = self.conn.cursor()
-        query = 'select r_id, r_capacity, r_fullCost, r_partsinstock from racks where r_id = %s'
+        query = 'select r_id, r_amount, w_id, p_id, r_capacity from racks where r_id = %s'
         cursor.execute(query, (r_id,))
         result = cursor.fetchone()
         return result
 
-    def insertRack(self, r_capacity, r_fullCost, r_partsinstock):
+    def insertRack(self, r_amount, w_id, p_id, r_capacity):
         cursor = self.conn.cursor()
-        query = 'insert into racks(r_capacity, r_fullCost, r_partsinstock) values(%s, %s, %s) returning racks.r_id;'
-        cursor.execute(query, (r_capacity, r_fullCost, r_partsinstock,))
+        query = 'insert into racks(r_amount, w_id, p_id, r_capacity) values(%s, %s, %s,%s) returning racks.r_id;'
+        cursor.execute(query, (r_amount, w_id, p_id, r_capacity))
         r_id = cursor.fetchone()[0]
         self.conn.commit()
         return r_id
 
-    def updateRack(self, r_id, r_capacity, r_fullcost, r_partsinstock):
+    def updateRack(self, r_id, r_amount, w_id, p_id, r_capacity):
         cursor = self.conn.cursor()
-        query = 'update racks set r_capacity = %s, r_fullcost = %s, r_partsinstock = %s where r_id = %s'
-        cursor.execute(query, (r_capacity, r_fullcost, r_partsinstock,r_id,))
+        query = 'update racks set r_amount = %s, w_id = %s, p_id = %s, r_capacity = %s where r_id = %s'
+        cursor.execute(query, (r_amount, w_id, p_id, r_capacity, r_id))
         self.conn.commit()
         return r_id
 
