@@ -8,13 +8,15 @@ class WarehouseHandler:
         result['w_id'] = t[0]
         result['w_name'] = t[1]
         result['w_location'] = t[2]
+        result['w_budget']= t[3]
         return result
 
-    def build_warehouse_attributes(self, w_id, w_name, w_location):
+    def build_warehouse_attributes(self, w_id, w_name, w_location, w_budget):
         result = {}
         result['w_id'] = w_id
         result['w_name'] = w_name
         result['w_location'] = w_location
+        result['w_budget']= w_budget
         return result
     
     def getAllWarehouses(self):
@@ -36,10 +38,11 @@ class WarehouseHandler:
     def insertWarehouse(self, data):
         w_name = data['w_name']
         w_location = data['w_location']
+        w_budget = data['w_budget']
 
-        if w_name and w_location:
+        if w_name and w_location and w_budget:
             dao = warehouseDAO()
-            w_id = dao.insertWarehouse(w_name, w_location)
+            w_id = dao.insertWarehouse(w_name, w_location, w_budget)
             data['w_id'] = w_id
             return jsonify(data), 201
         else:
@@ -48,10 +51,11 @@ class WarehouseHandler:
     def updateWarehouseById(self, w_id, data):
         w_name = data['w_name']
         w_location = data['w_location']
+        w_budget = data['w_budget']
 
-        if w_id and w_name and w_location:
+        if w_id and w_name and w_location and w_budget:
             dao = warehouseDAO()
-            flag = dao.updateWarehouseById(w_id, w_name, w_location)
+            flag = dao.updateWarehouseById(w_id, w_name, w_location, w_budget)
 
             if flag:
                 return jsonify(data), 200
