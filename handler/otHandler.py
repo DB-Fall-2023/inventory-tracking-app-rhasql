@@ -14,15 +14,21 @@ class OTHandler:
         result['t_id'] = row[0]
         result['ot_buyername'] = row[1]
         result['ot_sentto'] = row[2]
-        result['p_id'] = row[3]
-        result['w_id'] = row[4]
-        result['u_id'] = row[5]
+        result['t_date'] = row[3]
+        result['t_value'] = row[4]
+        result['t_quantity'] = row[5]
+        result['p_id'] = row[6]
+        result['w_id'] = row[7]
+        result['u_id'] = row[8]
         return result
-    def buildOTAttirbutes(self, t_id, ot_buyername, ot_sentto, p_id, w_id, u_id):
+    def buildOTAttirbutes(self,t_id,ot_buyername, ot_sentto, t_date, t_value, t_quantity, p_id, w_id, u_id):
         result = {}
         result['t_id'] = t_id
         result['ot_buyername'] = ot_buyername
         result['ot_sentto'] = ot_sentto
+        result['t_date'] = t_date
+        result['t_value'] = t_value
+        result['t_quantity'] = t_quantity
         result['p_id'] = p_id
         result['w_id'] = w_id
         result['u_id'] = u_id
@@ -81,11 +87,12 @@ class OTHandler:
         #r_id = data['r_id']
         u_id = data['u_id']
         tDAO = transactionDAO()
-        t_id = tDAO.insertTransaction(t_date, t_value, t_quantity)
-        if ot_buyername and ot_sentto and p_id and w_id and u_id:
+        t_id = tDAO.insertTransaction(data['t_date'], data['t_value'], data['t_quantity'], data['u_id'], data['w_id'], data['p_id'])
+        print(t_id)
+        if t_id and ot_buyername and ot_sentto and p_id and w_id and u_id:
             dao = OTDAO()
-            ot_id = OTDAO().insertOT(ot_buyername, ot_sentto, p_id, w_id, u_id)
-            result = self.buildOTAttirbutes(t_id,ot_buyername, ot_sentto, p_id, w_id, u_id)
+            ot_id = OTDAO().insertOT(t_id,ot_buyername, ot_sentto)
+            result = self.buildOTAttirbutes(t_id,ot_buyername, ot_sentto, t_date, t_value, t_quantity, p_id, w_id, u_id)
             return jsonify(Outgoing_Transactions=result), 201
         else:
             jsonify(Error="Unexpected attributes in post Request"), 400

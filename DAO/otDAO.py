@@ -25,10 +25,10 @@ class OTDAO:
         cursor.execute(query, (t_id,))
         result = cursor.fetchone()
         return result
-    def insertOT(self, ot_buyername, ot_sento, p_id, w_id, u_id):
+    def insertOT(self, t_id, ot_buyername, ot_sento):
         cursor = self.conn.cursor()
-        query = 'insert into outgoing_transactions(ot_buyername,ot_sentto,  p_id, w_id, u_id) values(%s, %s, %s,%s, %s) returning t_id;'
-        cursor.execute(query, (ot_buyername, ot_sento, p_id, w_id, u_id))
+        query = 'insert into outgoing_transactions(t_id, ot_buyername,ot_sentto) values(%s,%s, %s) returning t_id;'
+        cursor.execute(query, (t_id, ot_buyername, ot_sento))
         it_id = cursor.fetchone()[0]
         self.conn.commit()
         return it_id

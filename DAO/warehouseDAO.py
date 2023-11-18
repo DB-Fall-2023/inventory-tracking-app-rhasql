@@ -12,7 +12,8 @@ class warehouseDAO:
                                      host="ec2-18-211-172-50.compute-1.amazonaws.com",
                                      port="5432",
                                      database="d50qfjb63nlom1")
-    
+
+    #START OF CRUD OPERATIONS
     def getAllWarehouses(self):
         cursor = self.conn.cursor()
         result = []
@@ -49,10 +50,11 @@ class warehouseDAO:
     def updateWarehouseById(self, w_id, w_name, w_location, w_budget):
         cursor = self.conn.cursor()
         query = "update warehouse set w_name = %s, w_location = %s, w_budget = %s where w_id = %s"
-        cursor.execute(query, (w_name, w_location, w_id, w_budget))
-        count = cursor.rowcount
+        cursor.execute(query, (w_name, w_location, w_budget, w_id))
+        count = w_id
         self.conn.commit()
         return count
+    #EXTRA UTILIZATION FUNCTIONS
     def partIn(self, w_id, p_id, r_id):
         cursor = self.conn.cursor()
         query = ("Select p_id "
@@ -67,14 +69,80 @@ class warehouseDAO:
                  "where p_id = %s and w_id = %s")
         cursor.execute(query, (p_id, w_id))
         return cursor.fetchone()
+
+    #START OF LOCAL STATISTICS FUNCTIONS
     def getLowStock(self,w_id):
         cursor = self.conn.cursor()
-        query = "Select r_id, r_amount, w_id, p_id, r_capacity from racks natural inner join warehouse where w_id=%s and r_amount < r_capacity*0.25 order by r_amount limit 5 "
+        query = "Select r_id, r_amount, w_id, p_id, r_capacity from racks natural inner join warehouse where w_id=%s and r_amount < r_capacity*0.25 order by r_amount desc limit 5 "
         cursor.execute(query,(w_id,))
         result = []
         for row in cursor:
             result.append(row)
         return result
+    def getBottomParts(self, w_id):
+        cursor = self.conn.cursor()
+        query = ("select p_type,sum(r_amount) "
+                 "from parts natural inner join racks natural inner join warehouse "
+                 "where w_id = %s "
+                 "group by p_type "
+                 "order by sum(r_amount) asc "
+                 "Limit 3")
+        cursor.execute(query, (w_id,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def getMostSuppliers(self, w_id):
+        cursor = self.conn.cursor()
+        query = ("Select s_name, sum(t_quantity) "
+                 "from supplier natural inner join transactions natural inner join incoming_transactions "
+                 "where w_id = %s "
+                 "group by s_name "
+                 "order by sum(t_quantity) desc "
+                 "Limit 3")
+        cursor.execute(query, (w_id,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+    def getProfit(self, w_id):
+        cursor = self.conn.cursor()
+        query = ("Select sum(t_value) - (Select sum(t_value) from incoming_transactions natural inner join transactions where w_id= %s) "
+                 "From outgoing_transactions natural inner join transactions "
+                 "where w_id = %s")
+        cursor.execute(query,(w_id, w_id))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def getLeastTransactions(self, w_id):
+        cursor = self.conn.cursor()
+        query = ("Select sum(t_value), t_date "
+                 "From incoming_transactions natural inner join transactions "
+                 "where w_id = %s "
+                 "GROUP BY t_date "
+                 "ORDER BY sum(t_value) asc "
+                 "Limit 3")
+        cursor.execute(query, (w_id,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+    def getLeastOutgoing(self):
+        cursor = self.conn.cursor()
+        query = ("Select w_id, count(*) "
+                 "from transactions natural inner join outgoing_transactions "
+                 "group by w_id "
+                 "order by count(*) asc "
+                 "limit 3")
+        cursor.execute(query)
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
     def getExpensive(self,w_id):
         cursor = self.conn.cursor()
         query = ("Select r_id, r_amount, w_id, p_id, r_capacity, sum(r_amount*p_price) as total_price "
@@ -87,6 +155,7 @@ class warehouseDAO:
         for row in cursor:
             result.append(row)
         return result
+
     def getBudget(self, w_id):
         cursor = self.conn.cursor()
         query = "Select w_budget from warehouse where w_id = %s"
@@ -105,3 +174,4 @@ class warehouseDAO:
         w_budget = cursor.execute(query, (t_value, w_id))
         self.conn.commit()
         return w_budget
+

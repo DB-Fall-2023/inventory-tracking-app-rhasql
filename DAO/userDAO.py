@@ -56,3 +56,16 @@ class UserDAO:
         query = 'Select u_id from wuser natural inner join warehouse where u_id = %s and w_id = %s'
         cursor.execute(query, (u_id, w_id))
         return cursor.fetchone()
+
+    def getMostUserTransactions(self):
+        cursor = self.conn.cursor()
+        query = ('Select u_id, count(*) '
+                 'from transactions '
+                 'group by u_id '
+                 'order by count(*) desc '
+                 'LIMIT 3')
+        cursor.execute(query)
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result

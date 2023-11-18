@@ -1,6 +1,7 @@
 from flask import jsonify
 from DAO.warehouseDAO import warehouseDAO
 from handler.RacksHandler import RacksHandler
+from DAO.userDAO import UserDAO
 
 class WarehouseHandler:
     def build_warehouse(self, t):
@@ -17,6 +18,27 @@ class WarehouseHandler:
         result['w_name'] = w_name
         result['w_location'] = w_location
         result['w_budget']= w_budget
+        return result
+    def buildBestSupplier(self, data):
+        result = {}
+        result['supplier name'] = data[0]
+        result['amount supplied'] = data[1]
+        return result
+    def buildLowMaterial(self, data):
+        result = {}
+        result['material'] = data[0]
+        result['amount in stock'] = data[1]
+        return result
+    def buildLeastTransactions(self, data):
+        result = {}
+        result['cost per day'] = data[0]
+        result['day'] = data[1]
+        return result
+
+    def buildLeastOutgoing(self, data):
+        result = {}
+        result['warehouse id'] = data[0]
+        result['amount of Outgoing Transactions'] = data[1]
         return result
     
     def getAllWarehouses(self):
@@ -55,12 +77,10 @@ class WarehouseHandler:
 
         if w_id and w_name and w_location and w_budget:
             dao = warehouseDAO()
-            flag = dao.updateWarehouseById(w_id, w_name, w_location, w_budget)
-
-            if flag:
-                return jsonify(data), 200
-            else:
-                return jsonify(Error = "Not found"), 404
+            if not dao.getWarehouseById(w_id):  # if warehouse exist
+                return jsonify(Error="Warehouse doesn't exist"), 400
+            dao.updateWarehouseById(w_id, w_name, w_location, w_budget)
+            return jsonify(data), 200
         else:
             return jsonify(Error = "Unexpected atrribute values"), 400
     
@@ -72,25 +92,91 @@ class WarehouseHandler:
             return jsonify("OK"), 200
         else:
             return jsonify(Error = "Warehouse not found"), 404
-    def getLowStock(self, w_id):
+    def getLowStock(self, w_id, data):
         dao = warehouseDAO()
+        uDAO = UserDAO()
+        if not uDAO.inWarehouse(data['u_id'], w_id):
+            return jsonify(Error="User not part of warehouse"), 400
         if not dao.getWarehouseById(w_id):
             return jsonify(Error = "Warehouse doesn't exist"), 404
         dtuples = dao.getLowStock(w_id)
         result = []
         for x in dtuples:
             result.append(RacksHandler().build_racks(x))
-        return jsonify(result)
+        return jsonify(Low_Stock=result)
 
-    def getExpensiveRacks(self, w_id):
+    def getExpensiveRacks(self, w_id, data):
+        uDAO = UserDAO()
         dao = warehouseDAO()
         if not dao.getWarehouseById(w_id):
             return jsonify(Error = "Warehouse doesn't exist"), 404
+        if not uDAO.inWarehouse(data['u_id'], w_id):
+            return jsonify(Error="User not part of warehouse"), 400
         dtuples = dao.getExpensive(w_id)
         result = []
         for x in dtuples:
             result.append(RacksHandler().build_expensive_racks(x))
+        return jsonify(Most_Expensive=result)
+    def getBottomParts(self, w_id, data):
+        uDAO = UserDAO()
+        dao = warehouseDAO()
+        if not dao.getWarehouseById(w_id):
+            return jsonify(Error="Warehouse doesn't exist"), 404
+        if not uDAO.inWarehouse(data['u_id'], w_id):
+            return jsonify(Error="User not part of warehouse"), 400
+        #dao = warehouseDAO()
+        dtuples = dao.getBottomParts(w_id)
+        result = []
+        for x in dtuples:
+            result.append(WarehouseHandler().buildLowMaterial(x))
+        return jsonify(Lowest_ptype=result)
+    def getMostSuppliers(self, w_id, data):
+        uDAO = UserDAO()
+        dao = warehouseDAO()
+        if not dao.getWarehouseById(w_id):
+            return jsonify(Error = "Warehouse doesn't exist"), 404
+        if not uDAO.inWarehouse(data['u_id'], w_id):
+            return jsonify(Error="User not part of warehouse"), 400
+        ##dao = warehouseDAO()
+        dtuples = dao.getMostSuppliers(w_id)
+        result = []
+        for x in dtuples:
+            result.append(WarehouseHandler().buildBestSupplier(x))
         return jsonify(result)
+    def getProfit(self, w_id, data):
+        uDAO = UserDAO()
+        dao = warehouseDAO()
+        if not dao.getWarehouseById(w_id):
+            return jsonify(Error="Warehouse doesn't exist"), 404
+        if not uDAO.inWarehouse(data['u_id'], w_id):
+            return jsonify(Error="User not part of warehouse"), 400
+        #dao = warehouseDAO()
+        dtuples = dao.getProfit(w_id)
+        result = []
+        for x in dtuples:
+            result.append(x)
+        return jsonify(profit=result)
+    def getLeastTransactions(self, w_id, data):
+        uDAO = UserDAO()
+        dao = warehouseDAO()
+        if not dao.getWarehouseById(w_id):
+            return jsonify(Error="Warehouse doesn't exist"), 404
+        if not uDAO.inWarehouse(data['u_id'], w_id):
+            return jsonify(Error="User not part of warehouse"), 400
+        dtuples = dao.getLeastTransactions(w_id)
+        result = []
+        for x in dtuples:
+            result.append(WarehouseHandler().buildLeastTransactions(x))
+        return jsonify(LowestCostsByDay=result)
+
+    def getLeastOutgoing(self):
+        dao = warehouseDAO()
+        warehouse_list = dao.getLeastOutgoing()
+        result_list = []
+        for row in warehouse_list:
+            result = self.buildLeastOutgoing(row)
+            result_list.append(result)
+        return jsonify(UsersWithMostTransactions=result_list)
 
 
 

@@ -1,5 +1,6 @@
 from flask import jsonify
 from DAO.userDAO import UserDAO
+from DAO.warehouseDAO import  warehouseDAO
 
 
 class UserHandler:
@@ -15,9 +16,10 @@ class UserHandler:
         result['u_salary'] = row[5]
         result['u_address'] = row[6]
         result['u_SSN'] = row[7]
+        result['w_id'] = row[8]
         return result
 
-    def build_user_attributes(self, u_id, fname, lname, b_date, u_password, u_salary, u_address, u_SSN):
+    def build_user_attributes(self, u_id, fname, lname, b_date, u_password, u_salary, u_address, u_SSN, w_id):
         result = {}
         result['u_id'] = u_id
         result['fname'] = fname
@@ -27,6 +29,13 @@ class UserHandler:
         result['u_salary'] = u_salary
         result['u_address'] = u_address
         result['u_SSN'] = u_SSN
+        result['w_id'] = w_id
+        return result
+
+    def buildMostUserTransactions(self, data):
+        result = {}
+        result['u_id'] = data[0]
+        result['Amount of Transactions'] = data[1]
         return result
 
     def getAllUsers(self):
@@ -48,7 +57,8 @@ class UserHandler:
             return jsonify(wUser = user)
 
     def addUser(self, form):
-        if len(form) != 7:
+        wDAO = warehouseDAO()
+        if len(form) != 8:
             return jsonify(Error = "Malformed Post Request"), 400
         else:
             fname = form['fname']
@@ -58,10 +68,13 @@ class UserHandler:
             u_salary = form['u_salary']
             u_address = form['u_address']
             u_SSN = form['u_SSN']
-            if fname and lname and b_date and u_password and u_salary and u_address and u_SSN:
+            if not wDAO.getWarehouseById(form['w_id']):  # if warehouse exist
+                return jsonify(Error="Warehouse doesn't exist"), 400
+            w_id = form['w_id']
+            if fname and lname and b_date and u_password and u_salary and u_address and u_SSN and w_id:
                 dao = UserDAO()
-                u_id = dao.add(fname,lname,b_date,u_password,u_salary,u_address,u_SSN)
-                result = self.build_user_attributes(u_id, fname, lname, b_date, u_password, u_salary, u_address, u_SSN)
+                u_id = dao.add(fname,lname,b_date,u_password,u_salary,u_address,u_SSN, w_id)
+                result = self.build_user_attributes(u_id, fname, lname, b_date, u_password, u_salary, u_address, u_SSN, w_id)
                 return jsonify(wUsers=result), 201
             else:
                 return jsonify(Error='Unexpected attributes in post request'), 400
@@ -98,4 +111,13 @@ class UserHandler:
         else:
             dao.deleteUser(u_id)
             return jsonify(DeleteStatus = 'Succesful')
+
+    def getMostUserTransactions(self):
+        dao = UserDAO()
+        user_list = dao.getMostUserTransactions()
+        result_list = []
+        for row in user_list:
+            result = self.buildMostUserTransactions(row)
+            result_list.append(result)
+        return jsonify(UsersWithMostTransactions=result_list)
 
