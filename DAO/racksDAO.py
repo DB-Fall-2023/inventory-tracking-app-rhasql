@@ -43,6 +43,7 @@ class RacksDao:
         self.conn.commit()
         return r_id
 
+
     def deleteRack(self, r_id):
         cursor = self.conn.cursor()
         query = 'delete from racks where r_id = %s'
@@ -56,3 +57,29 @@ class RacksDao:
         cursor.execute(query, (p_id,w_id,))
         result = cursor.fetchone()
         return result
+    def getAmount(self, s_id):
+        cursor = self.conn.cursor()
+        query = 'Select r_amount From racks where r_id = %s'
+        cursor.execute(query, (s_id,))
+        result = cursor.fetchone()
+        return result
+
+    def getCapacity(self, r_id):
+        cursor = self.conn.cursor()
+        query = 'Select r_capacity From racks where r_id = %s'
+        cursor.execute(query, (r_id,))
+        result = cursor.fetchone()
+        return result
+
+    def updateAmount(self, r_id, amount):
+        cursor = self.conn.cursor()
+        query = 'update racks set r_amount = r_amount + %s where r_id = %s'
+        cursor.execute(query, (amount, r_id))
+        self.conn.commit()
+        return r_id
+    def lowerAmount(self, r_id, amount):
+        cursor = self.conn.cursor()
+        query = 'update racks set r_amount = r_amount - %s where r_id = %s'
+        cursor.execute(query, (amount, r_id))
+        self.conn.commit()
+        return r_id

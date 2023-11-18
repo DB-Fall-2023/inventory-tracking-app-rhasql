@@ -16,7 +16,7 @@ class warehouseDAO:
     def getAllWarehouses(self):
         cursor = self.conn.cursor()
         result = []
-        query = "select w_id, w_name, w_location from warehouse"
+        query = "select w_id, w_name, w_location, w_budget from warehouse"
         cursor.execute(query)
 
         for row in cursor:
@@ -25,15 +25,15 @@ class warehouseDAO:
     
     def getWarehouseById(self, w_id):
         cursor = self.conn.cursor()
-        query = "select w_id, w_name, w_location from warehouse where w_id = %s"
+        query = "select w_id, w_name, w_location, w_budget from warehouse where w_id = %s"
         cursor.execute(query, (w_id,))
         result = cursor.fetchone()
         return result
 
-    def insertWarehouse(self, w_name, w_location):
+    def insertWarehouse(self, w_name, w_location, w_budget):
         cursor = self.conn.cursor()
-        query = "insert into warehouse(w_name, w_location) values (%s, %s) returning w_id"
-        cursor.execute(query, (w_name, w_location,))
+        query = "insert into warehouse(w_name, w_location, w_budget) values (%s, %s, %s) returning w_id"
+        cursor.execute(query, (w_name, w_location, w_budget))
         w_id = cursor.fetchone()[0]
         self.conn.commit()
         return w_id
@@ -46,13 +46,27 @@ class warehouseDAO:
         self.conn.commit()
         return count
 
-    def updateWarehouseById(self, w_id, w_name, w_location):
+    def updateWarehouseById(self, w_id, w_name, w_location, w_budget):
         cursor = self.conn.cursor()
-        query = "update warehouse set w_name = %s, w_location = %s where w_id = %s"
-        cursor.execute(query, (w_name, w_location, w_id,))
+        query = "update warehouse set w_name = %s, w_location = %s, w_budget = %s where w_id = %s"
+        cursor.execute(query, (w_name, w_location, w_id, w_budget))
         count = cursor.rowcount
         self.conn.commit()
         return count
+    def partIn(self, w_id, p_id, r_id):
+        cursor = self.conn.cursor()
+        query = ("Select p_id "
+                 "from warehouse natural inner join racks natural inner join parts "
+                 "where p_id = %s and w_id = %s and r_id = %s")
+        cursor.execute(query, (p_id, w_id, r_id))
+        return cursor.fetchone() #checking if part in warehouse racks
+    def partInStock(self, w_id, p_id):
+        cursor = self.conn.cursor()
+        query = ("Select r_id "
+                 "from warehouse natural inner join racks natural inner join parts "
+                 "where p_id = %s and w_id = %s")
+        cursor.execute(query, (p_id, w_id))
+        return cursor.fetchone()
     def getLowStock(self,w_id):
         cursor = self.conn.cursor()
         query = "Select r_id, r_amount, w_id, p_id, r_capacity from racks natural inner join warehouse where w_id=%s and r_amount < r_capacity*0.25 order by r_amount limit 5 "
@@ -73,3 +87,21 @@ class warehouseDAO:
         for row in cursor:
             result.append(row)
         return result
+    def getBudget(self, w_id):
+        cursor = self.conn.cursor()
+        query = "Select w_budget from warehouse where w_id = %s"
+        w_budget = cursor.execute(query, (w_id,))
+        return cursor.fetchone()
+
+    def updateBudget(self, w_id, t_value):
+        cursor = self.conn.cursor()
+        query = "update warehouse set w_budget = w_budget - %s where w_id = %s returning warehouse.w_budget"
+        w_budget = cursor.execute(query, (t_value, w_id))
+        self.conn.commit()
+        return w_budget
+    def addBudget(self, w_id, t_value):
+        cursor = self.conn.cursor()
+        query = "update warehouse set w_budget = w_budget + %s where w_id = %s returning warehouse.w_budget"
+        w_budget = cursor.execute(query, (t_value, w_id))
+        self.conn.commit()
+        return w_budget

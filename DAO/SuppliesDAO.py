@@ -45,3 +45,9 @@ class SuppliesDAO:
         cursor.execute(query, (p_id, s_id))
         self.conn.commit()
         return p_id, s_id
+
+    def supplies(self, p_id, s_id):
+        cursor = self.conn.cursor()
+        query = "Select p_id from supplies where p_id = %s and s_id = %s"
+        cursor.execute(query, (p_id, s_id))
+        return cursor.fetchone()

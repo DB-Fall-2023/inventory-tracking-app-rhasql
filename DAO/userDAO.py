@@ -24,24 +24,24 @@ class UserDAO:
 
     def getUserById(self, u_id):
         cursor = self.conn.cursor()
-        query = 'select u_id, fname, lname, b_date, u_password, u_salary, u_address, u_SSN from wUser where u_id = %s'
+        query = 'select u_id, fname, lname, b_date, u_password, u_salary, u_address, u_SSN, w_id from wUser where u_id = %s'
         cursor.execute(query,(u_id,))
         result = cursor.fetchone()
         return result
 
 
-    def add(self,fname, lname, b_date, u_password, u_salary, u_address, u_SSN):
+    def add(self,fname, lname, b_date, u_password, u_salary, u_address, u_SSN, w_id):
         cursor = self.conn.cursor()
-        query = 'insert into wUser(fname, lname, b_date, u_password, u_salary, u_address, u_SSN) values (%s, %s, %s, %s, %s, %s, %s) returning u_id'
-        cursor.execute(query, (fname, lname, b_date, u_password, u_salary, u_address, u_SSN))
+        query = 'insert into wUser(fname, lname, b_date, u_password, u_salary, u_address, u_SSN, w_id) values (%s, %s, %s, %s, %s, %s, %s, %s) returning u_id'
+        cursor.execute(query, (fname, lname, b_date, u_password, u_salary, u_address, u_SSN, w_id))
         u_id = cursor.fetchone()[0]
         self.conn.commit()
         return u_id
 
-    def updateUser(self,u_id, fname, lname, b_date, u_password, u_salary, u_address, u_SSN):
+    def updateUser(self,u_id, fname, lname, b_date, u_password, u_salary, u_address, u_SSN, w_id):
         cursor = self.conn.cursor()
-        query = 'update wUser set fname = %s, lname = %s, b_date = %s, u_password = %s, u_salary = %s, u_address = %s, u_SSN = %s where u_id = %s'
-        cursor.execute(query, (fname, lname, b_date, u_password, u_salary, u_address, u_SSN, u_id,))
+        query = 'update wUser set fname = %s, lname = %s, b_date = %s, u_password = %s, u_salary = %s, u_address = %s, u_SSN = %s, w_id = %s where u_id = %s'
+        cursor.execute(query, (fname, lname, b_date, u_password, u_salary, u_address, u_SSN, w_id, u_id))
         self.conn.commit()
         return u_id
 
@@ -51,3 +51,8 @@ class UserDAO:
         cursor.execute(query, (u_id,))
         self.conn.commit()
         return u_id
+    def inWarehouse(self, u_id, w_id):
+        cursor = self.conn.cursor()
+        query = 'Select u_id from wuser natural inner join warehouse where u_id = %s and w_id = %s'
+        cursor.execute(query, (u_id, w_id))
+        return cursor.fetchone()

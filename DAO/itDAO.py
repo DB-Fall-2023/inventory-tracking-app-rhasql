@@ -13,28 +13,28 @@ class ITDAO:
                                      database="d50qfjb63nlom1")
     def getAllIT(self):
         cursor = self.conn.cursor()
-        query = 'select it_id, t_date, t_value, t_quantity, s_id, p_id, w_id, r_id, u_id from incoming_transactions'
+        query = 'select t_id, t_date, t_value, t_quantity, s_id, p_id, w_id, r_id, u_id from incoming_transactions natural  inner join transactions'
         cursor.execute(query)
         result = []
         for row in cursor:
             result.append(row)
         return result
-    def getIT(self, it_id):
+    def getIT(self, t_id):
         cursor = self.conn.cursor()
-        query = 'select it_id, t_date, t_value, t_quantity, s_id, p_id, w_id, r_id, u_id from incoming_transactions where it_id = %s'
-        cursor.execute(query, (it_id,))
+        query = 'select t_id, t_date, t_value, t_quantity, s_id, p_id, w_id, r_id, u_id from incoming_transactions natural  inner join transactions where t_id = %s'
+        cursor.execute(query, (t_id,))
         result = cursor.fetchone()
         return result
-    def insertIT(self, t_date, t_value, t_quantity, s_id, p_id, w_id, r_id, u_id):
+    def insertIT(self, t_id, s_id, p_id, w_id, r_id, u_id):
         cursor = self.conn.cursor()
-        query = 'insert into incoming_transactions(t_date, t_value, t_quantity, s_id, p_id, w_id, r_id, u_id) values(%s, %s, %s,%s, %s, %s, %s, %s) returning it_id;'
-        cursor.execute(query, (t_date, t_value, t_quantity, s_id, p_id, w_id, r_id, u_id))
+        query = 'insert into incoming_transactions(t_id, s_id, p_id, w_id, r_id, u_id) values(%s, %s, %s,%s, %s, %s) returning t_id;'
+        cursor.execute(query, (t_id, s_id, p_id, w_id, r_id, u_id))
         it_id = cursor.fetchone()[0]
         self.conn.commit()
         return it_id
-    def updateIT(self,it_id, t_date, t_value, t_quantity, s_id, p_id, w_id, r_id, u_id):
-        cursor = self.conn.cursor()
-        query = 'update incoming_transactions set t_date = %s, t_value = %s, t_quantity = %s, s_id = %s, p_id = %s, w_id = %s, r_id = %s, u_id = %s where it_id = %s'
-        cursor.execute(query, (t_date, t_value, t_quantity, s_id, p_id, w_id, r_id, u_id, it_id))
-        self.conn.commit()
-        return it_id
+    #def updateIT(self,it_id, t_date, t_value, t_quantity, s_id, p_id, w_id, r_id, u_id):
+        #cursor = self.conn.cursor()
+        query = 'update incoming_transactions natural inner join transactions set t_date = %s, t_value = %s, t_quantity = %s, s_id = %s, p_id = %s, w_id = %s, r_id = %s, u_id = %s where t_id = %s'
+        #cursor.execute(query, (t_date, t_value, t_quantity, s_id, p_id, w_id, r_id, u_id, it_id))
+        #self.conn.commit()
+        #return it_id
