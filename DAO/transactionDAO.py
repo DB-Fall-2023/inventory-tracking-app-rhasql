@@ -12,10 +12,10 @@ class transactionDAO:
                                      port="5432",
                                      database="d50qfjb63nlom1")
 
-    def insertTransaction(self, t_date, t_value, t_quantity):
+    def insertTransaction(self, t_date, t_value, t_quantity, u_id, w_id, p_id):
         cursor = self.conn.cursor()
-        query = 'insert into transactions(t_date,t_value,t_quantity) values(%s,%s,%s) returning transactions.t_id'
-        cursor.execute(query,(t_date, t_value, t_quantity))
+        query = 'insert into transactions(t_date,t_value,t_quantity, u_id, w_id, p_id) values(%s,%s,%s, %s, %s, %s) returning transactions.t_id'
+        cursor.execute(query,(t_date, t_value, t_quantity, u_id, w_id, p_id))
         t_id = cursor.fetchone()[0]
         self.conn.commit()
         return t_id

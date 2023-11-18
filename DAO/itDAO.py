@@ -25,10 +25,10 @@ class ITDAO:
         cursor.execute(query, (t_id,))
         result = cursor.fetchone()
         return result
-    def insertIT(self, t_id, s_id, p_id, w_id, r_id, u_id):
+    def insertIT(self, t_id, s_id, r_id):
         cursor = self.conn.cursor()
-        query = 'insert into incoming_transactions(t_id, s_id, p_id, w_id, r_id, u_id) values(%s, %s, %s,%s, %s, %s) returning t_id;'
-        cursor.execute(query, (t_id, s_id, p_id, w_id, r_id, u_id))
+        query = 'insert into incoming_transactions(t_id, s_id, r_id) values(%s, %s, %s) returning t_id;'
+        cursor.execute(query, (t_id, s_id, r_id,))
         it_id = cursor.fetchone()[0]
         self.conn.commit()
         return it_id

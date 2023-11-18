@@ -166,14 +166,45 @@ def getOTTransactions(ot_id):
     else:
         return jsonify("Not supported"), 405
 
+@app.route('/rhasql/warehouse/<int:w_id>/profit', methods = ['POST'])
+def getProfit(w_id):
+    if request.method == 'POST':
+        return WarehouseHandler().getProfit(w_id, request.json)
+    else:
+        return jsonify("Not supported"), 405
+
 @app.route('/rhasql/warehouse/<int:w_id>/rack/lowstock', methods = ['POST'])
 def getLowStock(w_id):
     if request.method == 'POST':
-        return WarehouseHandler().getLowStock(w_id)
-@app.route('/rhasql/warehouse/<int:w_id>/expensive', methods = ['POST'])
+        return WarehouseHandler().getLowStock(w_id, request.json)
+@app.route('/rhasql/warehouse/<int:w_id>/rack/expensive', methods = ['POST'])
 def getExpensiveRacks(w_id):
     if request.method == 'POST':
-        return WarehouseHandler().getExpensiveRacks(w_id)
+        return WarehouseHandler().getExpensiveRacks(w_id, request.json)
+@app.route('/rhasql/warehouse/<int:w_id>/rack/material', methods = ['POST'])
+def getBottomParts(w_id):
+    if request.method == 'POST':
+        return WarehouseHandler().getBottomParts(w_id, request.json)
+@app.route('/rhasql/warehouse/<int:w_id>/transaction/suppliers', methods = ['POST'])
+def getMostSuppliers(w_id):
+    if request.method == 'POST':
+        return WarehouseHandler().getMostSuppliers(w_id, request.json)
+
+@app.route('/rhasql/warehouse/<int:w_id>/transaction/leastcost', methods = ['POST'])
+def getLeastTransactions(w_id):
+    if request.method == 'POST':
+        return WarehouseHandler().getLeastTransactions(w_id, request.json)
+
+@app.route('/rhasql/most/transactions', methods = ['GET'])
+def getMostUserTransactions():
+    if request.method == 'GET':
+        return UserHandler().getMostUserTransactions()
+
+@app.route('/rhasql/least/outgoing', methods = ['GET'])
+def getLeastOutgoing():
+    if request.method == 'GET':
+        return WarehouseHandler().getLeastOutgoing()
+
 if __name__ == '__main__':
     app.run(debug=True)
 

@@ -108,7 +108,7 @@ class ITHandler:
             #return jsonify(Error='lol'), 404
 
         tDAO = transactionDAO()
-        t_id = tDAO.insertTransaction(data['t_date'], data['t_value'], data['t_quantity'])
+        t_id = tDAO.insertTransaction(data['t_date'], data['t_value'], data['t_quantity'], data['u_id'], data['w_id'], data['p_id'])
         #it_id = data['it_id']
         t_date = data['t_date']
         t_value = data['t_value']
@@ -119,7 +119,7 @@ class ITHandler:
         u_id = data['u_id']
         if t_id and t_value and t_date and t_quantity and s_id and r_id and p_id and w_id  and u_id:
             dao = ITDAO()
-            it_id = ITDAO().insertIT(t_id, s_id, p_id, w_id, r_id, u_id)
+            it_id = ITDAO().insertIT(t_id, s_id, r_id)
             result = self.buildITAttirbutes(t_id,t_date,t_value,t_quantity,s_id,p_id,w_id, r_id,u_id)
             return jsonify(Incoming_Transactions=result), 201
         else:
