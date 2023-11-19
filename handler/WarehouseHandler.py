@@ -59,6 +59,12 @@ class WarehouseHandler:
         result['Exchanges delivered'] = data[1]
         return result
 
+    def buildMostRacks(self, data):
+        result = {}
+        result['warehouse id'] = data[0]
+        result['Racks in warehouse'] = data[1]
+        return result
+
     def buildReceivesMost(self, data):
         result = {}
         result['User id'] = data[0]
@@ -243,4 +249,11 @@ class WarehouseHandler:
             result = self.buildMostDeliver(row)
             result_list.append(result)
         return jsonify(WarehouseWithMostIncoming=result_list)
-       
+    def getMostRacks(self):
+        dao = warehouseDAO()
+        warehouse_list = dao.getMostRacks()
+        result_list = []
+        for row in warehouse_list:
+            result = self.buildMostRacks(row)
+            result_list.append(result)
+        return jsonify(WarehousesWithMostRacks=result_list)
