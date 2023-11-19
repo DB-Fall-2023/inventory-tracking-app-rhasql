@@ -4,14 +4,17 @@ import psycopg2
 class warehouseDAO:
     
     def __init__(self):
-        connection_url = "host=localhost dbname=%s user=%s password=%s" % (pg_config['dbname'],
-                                                            pg_config['user'],
-                                                            pg_config['password'])
-        self.conn = psycopg2.connect(user="vbccpykujiisah",
-                                     password="3e4854dbe0ce20aad8ad4cf6cd8dad1b9e2382d39f59509970541a10f30c8908",
-                                     host="ec2-18-211-172-50.compute-1.amazonaws.com",
-                                     port="5432",
-                                     database="d50qfjb63nlom1")
+        connection_url = "user=%s password=%s host=%s port=%s dbname=%s" % (pg_config['user'],
+                                                                            pg_config['password'],
+                                                                            pg_config['host'],
+                                                                            pg_config['port'],
+                                                                            pg_config['dbname'])
+        # self.conn = psycopg2.connect(user="vbccpykujiisah",
+        #                            password="3e4854dbe0ce20aad8ad4cf6cd8dad1b9e2382d39f59509970541a10f30c8908",
+        #                           host="ec2-18-211-172-50.compute-1.amazonaws.com",
+        #                          port="5432",
+        #                         database="d50qfjb63nlom1")
+        self.conn = psycopg2.connect(connection_url)
 
     #START OF CRUD OPERATIONS
     def getAllWarehouses(self):
@@ -116,9 +119,12 @@ class warehouseDAO:
         return result
     def getProfit(self, w_id):
         cursor = self.conn.cursor()
-        query = ("Select sum(t_value) - (Select sum(t_value) from incoming_transactions natural inner join transactions where w_id= %s) "
-                 "From outgoing_transactions natural inner join transactions "
-                 "where w_id = %s")
+        query = ("with transactionsByYear as (SELECT t_id, SUBSTRING(t_date FROM CHAR_LENGTH(t_date) - 3) "
+                 "AS year, t_value, t_quantity, u_id, w_id, p_id "
+                 "FROM transactions group by t_id, year order by t_id) "
+                 "Select sum(t_value) - (Select sum(t_value) from outgoing_transactions natural inner join "
+                 "transactionsByYear where w_id= %s) as profit "
+                 "From incoming_transactions natural inner join transactions where w_id = %s")
         cursor.execute(query,(w_id, w_id))
         result = []
         for row in cursor:
@@ -232,6 +238,19 @@ class warehouseDAO:
                  "group by sender_w_id "
                  "order by count(*) desc "
                  "limit 5")
+        cursor.execute(query)
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def getMostRacks(self):
+        cursor = self.conn.cursor()
+        query = ("select w_id, count(*) "
+                 "from warehouse natural inner join racks "
+                 "group by w_id "
+                 "order by count(*) "
+                 "desc limit 10")
         cursor.execute(query)
         result = []
         for row in cursor:

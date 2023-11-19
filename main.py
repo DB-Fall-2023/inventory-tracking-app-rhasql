@@ -273,6 +273,12 @@ def getMostDeliver():
         return WarehouseHandler().getMostDeliver()
     else: #catches any other methods
         return jsonify(Error="Method not allowed."), 405
+@app.route('/rhasql/most/rack', methods=['GET'])
+def getMostRacks():
+    if request.method == 'GET':
+        return WarehouseHandler().getMostRacks()
+    else: #catches any other methods
+        return jsonify(Error="Method not allowed"), 405
 
 if __name__ == '__main__':
     app.run(debug=True)

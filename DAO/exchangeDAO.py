@@ -3,14 +3,17 @@ import psycopg2
 
 class ExchangeDAO:
     def __init__(self):
-        connection_url = "host=localhost dbname=%s user=%s password=%s" % (pg_config['dbname'],
-                                                            pg_config['user'],
-                                                            pg_config['password'])
-        self.conn = psycopg2.connect(user="vbccpykujiisah",
-                                     password="3e4854dbe0ce20aad8ad4cf6cd8dad1b9e2382d39f59509970541a10f30c8908",
-                                     host="ec2-18-211-172-50.compute-1.amazonaws.com",
-                                     port="5432",
-                                     database="d50qfjb63nlom1")
+        connection_url = "user=%s password=%s host=%s port=%s dbname=%s" % (pg_config['user'],
+                                                                            pg_config['password'],
+                                                                            pg_config['host'],
+                                                                            pg_config['port'],
+                                                                            pg_config['dbname'])
+        # self.conn = psycopg2.connect(user="vbccpykujiisah",
+        #                            password="3e4854dbe0ce20aad8ad4cf6cd8dad1b9e2382d39f59509970541a10f30c8908",
+        #                           host="ec2-18-211-172-50.compute-1.amazonaws.com",
+        #                          port="5432",
+        #                         database="d50qfjb63nlom1")
+        self.conn = psycopg2.connect(connection_url)
     def getAllExchange(self):
         cursor = self.conn.cursor()
         query = 'select t_id, sender_u_id, sender_w_id, sender_p_id, sender_r_id, receiver_r_id, reciever_quantity, t_date, t_value, t_quantity, p_id, w_id, u_id from exchange natural inner join transactions'
