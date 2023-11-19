@@ -55,6 +55,7 @@ class RacksHandler:
             return jsonify(racks = Racks)
     
     def insertRack(self, data):
+        #print('har')
         if len(data) != 4:
             return jsonify(Error="Malformed request"), 400
         dao = RacksDao()
@@ -68,6 +69,7 @@ class RacksHandler:
             return jsonify(Error="Cannot add amount greater than capacity"), 402
         if dao.rackExists(data['p_id'], data['w_id']):
             return jsonify(Error="Rack already exists in warehouse"), 402
+        #print('haer')
         r_capacity = data['r_capacity']
         r_amount = data['r_amount']
         p_id = data['p_id']
@@ -80,7 +82,10 @@ class RacksHandler:
             r_id = dao.insertRack(r_amount, w_id, p_id, r_capacity)
             result = self.buildRacksAttributes(r_id, r_amount, w_id, p_id, r_capacity)
             return jsonify(racks = result), 201
-        else: jsonify(Error = "Unexpected attributes in post Request"), 400
+        else:
+            return jsonify(Error="Unexpected attributes in post Request"), 400
+
+        #print('cringe2')
 
     def updateRack(self , r_id, data):
         if len(data) != 4:
