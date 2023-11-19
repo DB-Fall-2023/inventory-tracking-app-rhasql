@@ -53,6 +53,9 @@ class OTHandler:
             OT = self.buildOT(row)
             return jsonify(Incoming_Transactions=OT)
     def insertOT(self, data):
+
+        if len(data) != 8:
+            return jsonify(Error="Malformed request"), 400
         uDAO = UserDAO()
         rDAO = RacksDao()
         wDAO = warehouseDAO()
@@ -97,6 +100,8 @@ class OTHandler:
         else:
             jsonify(Error="Unexpected attributes in post Request"), 400
     def updateOT(self, ot_id, data):
+        if len(data) != 8:
+            return jsonify(Error="Malformed request"), 400
         dao = OTDAO()
         uDAO = UserDAO()
         rDAO = RacksDao()
@@ -119,7 +124,7 @@ class OTHandler:
                 return jsonify(Error = "Malformed update request."), 400
             else:
                 ot_buyername = data['ot_buyername']
-                ot_placesent = data['ot_placesent']
+                ot_sentto = data['ot_sentto']
                 t_date = data['t_date']
                 t_value = data['t_value']
                 t_quantity = data['t_quantity']
@@ -128,9 +133,9 @@ class OTHandler:
                 w_id = data['w_id']
                 #r_id = data['r_id']
                 u_id = data['u_id']
-                if ot_buyername and ot_placesent and t_date and t_value and t_quantity and p_id and w_id and r_id and u_id:
-                    dao.updateOT(ot_id, ot_buyername, ot_placesent, t_date, t_value, t_quantity, p_id, w_id, r_id, u_id)
-                    result = self.buildOTAttirbutes(ot_id, ot_buyername, ot_placesent, t_date, t_value, t_quantity, p_id, w_id, r_id, u_id)
+                if ot_buyername and ot_sentto and t_date and t_value and t_quantity and p_id and w_id and u_id:
+                    dao.updateOT(ot_id, ot_buyername, ot_sentto, t_date, t_value, t_quantity, p_id, w_id, u_id)
+                    result = self.buildOTAttirbutes(ot_id, ot_buyername, ot_sentto, t_date, t_value, t_quantity, p_id, w_id, u_id)
                     return jsonify(Incoming_transaction=result), 200
                 else:
                     return jsonify(Error='Unexpected attributes in update request.'), 400

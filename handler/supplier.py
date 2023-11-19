@@ -28,12 +28,15 @@ class SupplierHandler:
         if result :
             return jsonify(self.mapToDict(result))
         else:
-            return jsonify("Not Found"), 404
+            return jsonify(Error="Not Found"), 404
 
     def insertSupplier(self, data):
+        if len(data) != 3:
+            return jsonify(Error="Malformed request"), 404
         name = data['s_name']
         city = data['s_city']
         phone = data['s_phone']
+
 
         if name and city and phone:
             dao = SuppliersDAO()
@@ -42,7 +45,7 @@ class SupplierHandler:
             return jsonify(data), 201
 
         else:
-            return jsonify("Unexpected attribute values"), 400
+            return jsonify(Error="Unexpected attribute values"), 400
 
     def deleteById(self, sid):
         dao = SuppliersDAO()
@@ -51,13 +54,14 @@ class SupplierHandler:
         if result :
             return jsonify("OK"), 200
         else:
-            return jsonify("Not Found"), 404
+            return jsonify(Error="Supplier Not Found"), 404
 
     def updateById(self, sid, data):
+        if len(data) != 3:
+            return jsonify(Error="Malformed request"), 404
         name = data['Name']
         city = data['City']
         phone = data['Phone']
-
         if sid and city and phone:
             dao = SuppliersDAO()
             flag = dao.updateById(sid, name, city, phone)
@@ -65,7 +69,7 @@ class SupplierHandler:
             if flag:
                 return jsonify(data), 200
             else:
-                return jsonify("Not found"), 404
+                return jsonify(Error="Not found"), 404
 
         else:
             return jsonify("Unexpected attribute values"), 400

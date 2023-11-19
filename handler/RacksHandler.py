@@ -55,6 +55,8 @@ class RacksHandler:
             return jsonify(racks = Racks)
     
     def insertRack(self, data):
+        if len(data) != 4:
+            return jsonify(Error="Malformed request"), 400
         dao = RacksDao()
         pDAO = PartsDAO()
         wDAO = warehouseDAO()
@@ -81,6 +83,8 @@ class RacksHandler:
         else: jsonify(Error = "Unexpected attributes in post Request"), 400
 
     def updateRack(self , r_id, data):
+        if len(data) != 4:
+            return jsonify(Error="Malformed request"), 400
         dao = RacksDao()
         pDAO = PartsDAO()
         wDAO = warehouseDAO()
