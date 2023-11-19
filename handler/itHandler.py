@@ -83,9 +83,14 @@ class ITHandler:
                     else: #quantity gets added to rack
                         if (sum(wDAO.getBudget(data['w_id'])) < int(data['t_value'])):
                             return jsonify(Error="Could not purchase, budget too low"), 400
+                        if not (sDAO.supplies(data['s_id'], data['p_id'])):
+                            return jsonify(Error="Supplier does not supply part"), 400
+                        if(sum(sDAO.getStock(data['s_id'], data['p_id'])) < data['t_quantity']):
+                            return jsonify(Error="Not enough part in supplier stock"), 400
                         else:
                             rDAO.updateAmount(data['r_id'], data['t_quantity'])  # update amount of parts in rack and update budget
                             wDAO.updateBudget(data['w_id'], data['t_value'])
+                            sDAO.updateStock(data['s_id'], data['p_id'], data['t_quantity'])
                             r_id = data['r_id']
                 else: #return error if rack selecte doesn't contain x item
                     return jsonify(Error="Incorrect Rack selected"), 400
@@ -93,14 +98,19 @@ class ITHandler:
                 if wDAO.partInStock(data['w_id'], data['p_id']): #if part in SOME rack in da warehouse
                     return jsonify(Error="Incorrect Rack selected"), 400
                 else: #if rack doesn't exist
-                    print("oh holera")
+                    #print("oh holera")
                     if (sum(wDAO.getBudget(data['w_id'])) < int(data['t_value'])):
                         return jsonify(Error="Could not purchase, budget too low"), 400
+                    if not (sDAO.supplies(data['s_id'], data['p_id'])):
+                        return jsonify(Error="Supplier does not supply part"), 400
+                    if (sum(sDAO.getStock(data['s_id'], data['p_id'])) < data['t_quantity']):
+                        return jsonify(Error="Not enough part in supplier stock"), 400
                     else:
                         r_id = rDAO.insertRack(data['t_quantity'], data['w_id'], data['p_id'], data['t_quantity'])
                         #rDAO.updateAmount(data['r_id'],
                                           #data['t_quantity'])  # update amount of parts in rack and update budget
                         wDAO.updateBudget(data['w_id'], data['t_value'])
+                        sDAO.updateStock(data['s_id'], data['p_id'])
         else:
             return jsonify(Error="Malformed request"), 400
                         #r_id = data['r_id']
