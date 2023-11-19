@@ -40,6 +40,18 @@ class WarehouseHandler:
         result['warehouse id'] = data[0]
         result['amount of Outgoing Transactions'] = data[1]
         return result
+
+    def buildMostCities(self, data):
+        result = {}
+        result['warehouse city'] = data[0]
+        result['amount of Transactions'] = data[1]
+        return result
+
+    def buildMostIncoming(self, data):
+        result = {}
+        result['warehouse id'] = data[0]
+        result['amount of Incoming Transactions'] = data[1]
+        return result
     
     def getAllWarehouses(self):
         dao = warehouseDAO()
@@ -176,8 +188,22 @@ class WarehouseHandler:
         for row in warehouse_list:
             result = self.buildLeastOutgoing(row)
             result_list.append(result)
-        return jsonify(UsersWithMostTransactions=result_list)
+        return jsonify(WarehouseLeastOutgoing=result_list)
 
-
-
+    def getMostIncoming(self):
+        dao = warehouseDAO()
+        warehouse_list = dao.getMostIncoming()
+        result_list = []
+        for row in warehouse_list:
+            result = self.buildMostIncoming(row)
+            result_list.append(result)
+        return jsonify(WarehouseWithMostIncoming=result_list)
+    def getMostCities(self):
+        dao = warehouseDAO()
+        warehouse_list = dao.getMostCities()
+        result_list = []
+        for row in warehouse_list:
+            result = self.buildMostCities(row)
+            result_list.append(result)
+        return jsonify(WarehouseWithMostIncoming=result_list)
        
