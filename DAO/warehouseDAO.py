@@ -183,3 +183,28 @@ class warehouseDAO:
         self.conn.commit()
         return w_budget
 
+    def getMostIncoming(self):
+        cursor = self.conn.cursor()
+        query = ("Select w_id, count(*) "
+                 "from transactions natural inner join incoming_transactions "
+                 "group by w_id "
+                 "order by count(*) desc "
+                 "limit 5")
+        cursor.execute(query)
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def getMostCities(self):
+        cursor = self.conn.cursor()
+        query = ("Select w_location, count(*) "
+                 "from warehouse natural inner join transactions "
+                 "group by w_location "
+                 "order by count(*) desc "
+                 "limit 3")
+        cursor.execute(query)
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result

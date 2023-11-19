@@ -220,6 +220,17 @@ def getLeastOutgoing():
     if request.method == 'GET':
         return WarehouseHandler().getLeastOutgoing()
 
+
+@app.route('/rhasql/most/incoming', methods=['GET'])
+def getMostIncoming():
+    if request.method == 'GET':
+        return WarehouseHandler().getMostIncoming()
+
+@app.route('/rhasql/most/city', methods=['GET'])
+def getMostCities():
+    if request.method == 'GET':
+        return WarehouseHandler().getMostCities()
+
 if __name__ == '__main__':
     app.run(debug=True)
 
