@@ -13,7 +13,7 @@ class ExchangeDAO:
                                      database="d50qfjb63nlom1")
     def getAllExchange(self):
         cursor = self.conn.cursor()
-        query = 'select t_id, sender_u_id, sender_w_id, sender_p_id, sender_r_id, receiver_r_id, receiver_quantity, t_date, t_value, t_quantity, p_id, w_id, u_id from exchange natural inner join transactions'
+        query = 'select t_id, sender_u_id, sender_w_id, sender_p_id, sender_r_id, receiver_r_id, reciever_quantity, t_date, t_value, t_quantity, p_id, w_id, u_id from exchange natural inner join transactions'
         cursor.execute(query)
         result = []
         for row in cursor:
@@ -22,7 +22,7 @@ class ExchangeDAO:
 
     def getExchangeById(self, t_id):
         cursor = self.conn.cursor()
-        query = 'select t_id, sender_u_id, sender_w_id, sender_p_id, sender_r_id, receiver_r_id, receiver_quantity, t_date, t_value, t_quantity, p_id, w_id, u_id from exchange natural inner join transactions where t_id = %s'
+        query = 'select t_id, sender_u_id, sender_w_id, sender_p_id, sender_r_id, receiver_r_id, reciever_quantity, t_date, t_value, t_quantity, p_id, w_id, u_id from exchange natural inner join transactions where t_id = %s'
         cursor.execute(query, (t_id,))
         result = cursor.fetchone()
         return result
