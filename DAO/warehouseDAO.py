@@ -62,6 +62,14 @@ class warehouseDAO:
                  "where p_id = %s and w_id = %s and r_id = %s")
         cursor.execute(query, (p_id, w_id, r_id))
         return cursor.fetchone() #checking if part in warehouse racks
+
+    def allPartIn(self, w_id, p_id):
+        cursor = self.conn.cursor()
+        query = ("Select p_id "
+                 "from warehouse natural inner join racks natural inner join parts "
+                 "where p_id = %s and w_id = %s ")
+        cursor.execute(query, (p_id, w_id))
+        return cursor.fetchone() # checking if there is any rack with specific part.
     def partInStock(self, w_id, p_id):
         cursor = self.conn.cursor()
         query = ("Select r_id "

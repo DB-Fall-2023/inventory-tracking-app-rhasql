@@ -8,6 +8,7 @@ from handler.SuppliesHandler import SuppliesHandler
 from handler.WarehouseHandler import WarehouseHandler
 from handler.itHandler import ITHandler
 from handler.otHandler import OTHandler
+from handler.exchangeHandler import ExchangeHandler
 app = Flask(__name__)
 
 CORS(app)
@@ -165,6 +166,20 @@ def getOTTransactions(ot_id):
         return OTHandler().updateOT(ot_id, request.json)
     else:
         return jsonify("Not supported"), 405
+
+@app.route('/rhasql/Exchange', methods = ['GET', 'POST'])
+def getAllExchange():
+    if request.method == 'POST':
+        return ExchangeHandler().insertExchange(request.json)
+    if request.method == 'GET':
+        return ExchangeHandler().getAllExchange()
+    else:
+        return jsonify("Not supported"), 405
+
+@app.route('/rhasql/Exchange/<int:ex_id>', methods = ['GET', 'PUT', 'DELETE'])
+def getExchangeById(ex_id):
+    if request.method == 'GET':
+        return ExchangeHandler().getExchangeById(ex_id)
 
 @app.route('/rhasql/warehouse/<int:w_id>/profit', methods = ['POST'])
 def getProfit(w_id):
