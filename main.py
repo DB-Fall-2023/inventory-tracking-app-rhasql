@@ -190,6 +190,8 @@ def getAllExchange():
 def getExchangeById(ex_id):
     if request.method == 'GET':
         return ExchangeHandler().getExchangeById(ex_id)
+    if request.method == 'PUT':
+        return ExchangeHandler().updateExchange(ex_id, request.json)
     else: #catches any other methods
         return jsonify(Error="Method not allowed."), 405
 

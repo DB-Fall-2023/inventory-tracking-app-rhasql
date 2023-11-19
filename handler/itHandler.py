@@ -166,7 +166,7 @@ class ITHandler:
             return jsonify(Error="Part doesn't exist"), 402
         else:
             if len(data) != 8:
-                print(len(data))
+                #print(len(data))
                 return jsonify(Error = "Malformed update request."), 400
             else:
                 t_date = data['t_date']
