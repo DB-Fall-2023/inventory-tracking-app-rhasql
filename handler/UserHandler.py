@@ -82,10 +82,11 @@ class UserHandler:
 
     def updateUser(self, u_id, form):
         dao = UserDAO()
+        wDAO = warehouseDAO()
         if not dao.getUserById(u_id):
             return jsonify(Error = "User not found."), 404
         else:
-            if len(form) != 7:
+            if len(form) != 8:
                 print(len(form))
                 return jsonify(Error = "Malformed update request."), 400
             else:
@@ -96,9 +97,12 @@ class UserHandler:
                 u_salary = form['u_salary']
                 u_address = form['u_address']
                 u_SSN = form['u_SSN']
-                if fname and lname and b_date and u_password and u_salary and u_address and u_SSN:
-                    dao.updateUser(u_id, fname, lname, b_date, u_password, u_salary, u_address, u_SSN)
-                    result = self.build_user_attributes(u_id, fname, lname, b_date, u_password, u_salary, u_address, u_SSN)
+                if not wDAO.getWarehouseById(form['w_id']):  # if warehouse exist
+                    return jsonify(Error="Warehouse doesn't exist"), 400
+                w_id = form['w_id']
+                if fname and lname and b_date and u_password and u_salary and u_address and u_SSN and w_id:
+                    dao.updateUser(u_id, fname, lname, b_date, u_password, u_salary, u_address, u_SSN, w_id)
+                    result = self.build_user_attributes(u_id, fname, lname, b_date, u_password, u_salary, u_address, u_SSN, w_id)
                     return jsonify(wUser = result), 200
                 else:
                     return jsonify(Error = 'Unexpected attributes in update request'), 400

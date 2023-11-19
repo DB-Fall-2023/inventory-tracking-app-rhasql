@@ -78,9 +78,9 @@ class ExchangeHandler:
         if rDAO.getRacksById(data['receiver_r_id']) and rDAO.getRacksById(data['sender_r_id']): #if rack exists
             if wDAO.partIn(data['w_id'], data['p_id'], data['receiver_r_id']) and wDAO.partIn(data['sender_w_id'], data['sender_p_id'], data['sender_r_id']):
                 if not wDAO.allPartIn(data['w_id'], data['sender_p_id']):
-                    rDAO.insertRack(data['t_quantity'], data['w_id'], data['sender_p_id'], 50)
-                elif not wDAO.allPartIn(data['sender_w_id'], data["p_id"]):
-                    rDAO.insertRack(data['receiver_quantity'], data['sender_w_id'], data['p_id'], 50)
+                    rDAO.insertRack(data['t_quantity'], data['w_id'], data['sender_p_id'], data['t_quantity'])
+                if not wDAO.allPartIn(data['sender_w_id'], data["p_id"]):
+                    rDAO.insertRack(data['receiver_quantity'], data['sender_w_id'], data['p_id'], data['receiver_quantity'])
                 if ( (sum(rDAO.getAmount(data['receiver_r_id'])) + int(data['t_quantity']) > sum(rDAO.getCapacity(data['receiver_r_id']))) and (sum(rDAO.getAmount(data['sender_r_id'])) + int(data['receiver_quantity']) > sum(rDAO.getCapacity(data['sender_r_id']))) ):  # if amount added surpases rack capacity
                     return jsonify(Error="Rack capacity exceeded"), 400
                 else:  # quantity gets added to rack
@@ -96,7 +96,7 @@ class ExchangeHandler:
             else:  # return error if rack selected doesn't contain x item
                 return jsonify(Error="Incorrect Rack selected"), 400
         else:
-            if wDAO.partInStock(data['w_id'], data['p_id']) and wDAO.partInStock(data['sender_w_id'], data['sender_p_id']): #if part in SOME rack in da warehouse
+            if wDAO.partInStock(data['w_id'], data['p_id']) and wDAO.partInStock(data['sender_w_id'], data['sender_p_id']): #if part in SOME rack in the warehouse
                 return jsonify(Error="Incorrect Rack selected"), 400
             elif not rDAO.getRacksById(data['receiver_r_id']):
                 reciever_r_id = rDAO.insertRack(data['t_quantity'], data['w_id'], data['p_id'], data['t_quantity'])

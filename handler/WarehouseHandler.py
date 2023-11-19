@@ -82,6 +82,8 @@ class WarehouseHandler:
             return jsonify(Error = "Warehouse not found."), 404
 
     def insertWarehouse(self, data):
+        if len(data) != 3:
+            return jsonify(Error="Malformed request"), 400
         w_name = data['w_name']
         w_location = data['w_location']
         w_budget = data['w_budget']
@@ -95,6 +97,8 @@ class WarehouseHandler:
             return jsonify(Error = "Unexpected attribute values"), 400
     
     def updateWarehouseById(self, w_id, data):
+        if len(data) != 3:
+            return jsonify(Error="Malformed request"), 400
         w_name = data['w_name']
         w_location = data['w_location']
         w_budget = data['w_budget']

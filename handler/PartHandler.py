@@ -36,6 +36,8 @@ class PartHandler:
 
     #Adds part to DB
     def addPart(self, json):
+        if len(json) != 5:
+            return jsonify(Error="Malformed request"), 400
         # Sets variables to send to build_part_attributes function
         p_name = json['p_name']
         p_price = json['p_price']
@@ -43,6 +45,8 @@ class PartHandler:
         p_color = json['p_color']
         p_weight = json['p_weight']
         # Checks if any are NULL
+        if len(json) != 5:
+            return jsonify(Error="Malformed request"), 400
         if p_name and p_price and p_type and p_color and p_weight:
             dao = PartsDAO()
             p_id = dao.insert(p_name, p_price, p_type, p_color, p_weight)
@@ -56,7 +60,7 @@ class PartHandler:
         dao = PartsDAO()
         dtuple = dao.getPart(p_id)
         if not dtuple:
-            return jsonify(Error="Part doesn't exist"), 402
+            return jsonify(Error="Part doesn't exist"), 404
         part = self.mapToDict(dtuple)
         return jsonify(Part=part)
 

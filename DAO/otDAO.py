@@ -21,7 +21,7 @@ class OTDAO:
         return result
     def getOT(self, t_id):
         cursor = self.conn.cursor()
-        query = 'select t_id, ot_buyername, t_date, t_value, t_quantity, p_id, w_id, u_id from outgoing_transactions natural inner join transactions where t_id = %s'
+        query = 'select t_id, ot_buyername, ot_sentto, t_date, t_value, t_quantity, p_id, w_id, u_id from outgoing_transactions natural inner join transactions where t_id = %s'
         cursor.execute(query, (t_id,))
         result = cursor.fetchone()
         return result
@@ -32,9 +32,12 @@ class OTDAO:
         it_id = cursor.fetchone()[0]
         self.conn.commit()
         return it_id
-    def updateOT(self,t_id, ot_buyername, ot_sentto, p_id, w_id, r_id, u_id):
+    def updateOT(self,t_id, ot_buyername, ot_sentto, t_date, t_value, t_quantity, p_id, w_id, u_id):
         cursor = self.conn.cursor()
-        query = 'update outgoing_transactions set ot_buyername = %s, ot_sentto = %s, p_id = %s, w_id = %s, u_id = %s where t_id = %s'
-        cursor.execute(query, (ot_buyername, ot_sentto, p_id, w_id, r_id, u_id, t_id))
+        query = 'update transactions set t_date = %s, t_value = %s, t_quantity = %s, p_id = %s, w_id = %s, u_id = %s where t_id = %s'
+        cursor.execute(query, (t_date, t_value, t_quantity, p_id, w_id, u_id, t_id))
+        self.conn.commit()
+        query = 'update outgoing_transactions set ot_buyername = %s, ot_sentto = %s where t_id = %s'
+        cursor.execute(query, (ot_buyername, ot_sentto, t_id))
         self.conn.commit()
         return t_id

@@ -32,9 +32,13 @@ class ITDAO:
         it_id = cursor.fetchone()[0]
         self.conn.commit()
         return it_id
-    #def updateIT(self,it_id, t_date, t_value, t_quantity, s_id, p_id, w_id, r_id, u_id):
-        #cursor = self.conn.cursor()
-        query = 'update incoming_transactions natural inner join transactions set t_date = %s, t_value = %s, t_quantity = %s, s_id = %s, p_id = %s, w_id = %s, r_id = %s, u_id = %s where t_id = %s'
-        #cursor.execute(query, (t_date, t_value, t_quantity, s_id, p_id, w_id, r_id, u_id, it_id))
+    def updateIT(self,it_id, t_date, t_value, t_quantity, s_id, p_id, w_id, r_id, u_id):
+        cursor = self.conn.cursor()
+        query = 'update transactions set t_date = %s, t_value = %s, t_quantity = %s, p_id = %s, w_id = %s, u_id = %s where t_id = %s'
+        cursor.execute(query, (t_date, t_value, t_quantity, p_id, w_id, u_id, it_id))
+        self.conn.commit()
+        query = 'update incoming_transactions set s_id = %s, r_id = %s where t_id = %s'
+        cursor.execute(query, (s_id,r_id, it_id))
+        self.conn.commit()
         #self.conn.commit()
-        #return it_id
+        return it_id
