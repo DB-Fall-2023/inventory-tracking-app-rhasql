@@ -138,6 +138,20 @@ class warehouseDAO:
         for row in cursor:
             result.append(row)
         return result
+
+    def getReceivesMost(self, w_id):
+        cursor = self.conn.cursor()
+        query = ("Select u_id, count(*) "
+                 "From transactions natural inner join exchange "
+                 "where w_id = %s "
+                 "group by u_id "
+                 "order by count(*) desc "
+                 "Limit 3")
+        cursor.execute(query, (w_id,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
     def getLeastOutgoing(self):
         cursor = self.conn.cursor()
         query = ("Select w_id, count(*) "
@@ -150,6 +164,8 @@ class warehouseDAO:
         for row in cursor:
             result.append(row)
         return result
+
+
 
     def getExpensive(self,w_id):
         cursor = self.conn.cursor()
@@ -203,6 +219,19 @@ class warehouseDAO:
                  "group by w_location "
                  "order by count(*) desc "
                  "limit 3")
+        cursor.execute(query)
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def getMostDeliver(self):
+        cursor = self.conn.cursor()
+        query = ("Select sender_w_id, count(*) "
+                 "from transactions natural inner join exchange "
+                 "group by sender_w_id "
+                 "order by count(*) desc "
+                 "limit 5")
         cursor.execute(query)
         result = []
         for row in cursor:

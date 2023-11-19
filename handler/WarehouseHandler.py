@@ -52,6 +52,18 @@ class WarehouseHandler:
         result['warehouse id'] = data[0]
         result['amount of Incoming Transactions'] = data[1]
         return result
+
+    def buildMostDeliver(self, data):
+        result = {}
+        result['warehouse id'] = data[0]
+        result['Exchanges delivered'] = data[1]
+        return result
+
+    def buildReceivesMost(self, data):
+        result = {}
+        result['User id'] = data[0]
+        result['Exchanges recieved'] = data[1]
+        return result
     
     def getAllWarehouses(self):
         dao = warehouseDAO()
@@ -181,6 +193,19 @@ class WarehouseHandler:
             result.append(WarehouseHandler().buildLeastTransactions(x))
         return jsonify(LowestCostsByDay=result)
 
+    def getReceivesMost(self, w_id, data):
+        uDAO = UserDAO()
+        dao = warehouseDAO()
+        if not dao.getWarehouseById(w_id):
+            return jsonify(Error="Warehouse doesn't exist"), 404
+        if not uDAO.inWarehouse(data['u_id'], w_id):
+            return jsonify(Error="User not part of warehouse"), 400
+        dtuples = dao.getReceivesMost(w_id)
+        result = []
+        for x in dtuples:
+            result.append(WarehouseHandler().buildReceivesMost(x))
+        return jsonify(UsersThatRecieveMost=result)
+
     def getLeastOutgoing(self):
         dao = warehouseDAO()
         warehouse_list = dao.getLeastOutgoing()
@@ -204,6 +229,14 @@ class WarehouseHandler:
         result_list = []
         for row in warehouse_list:
             result = self.buildMostCities(row)
+            result_list.append(result)
+        return jsonify(WarehouseWithMostIncoming=result_list)
+    def getMostDeliver(self):
+        dao = warehouseDAO()
+        warehouse_list = dao.getMostDeliver()
+        result_list = []
+        for row in warehouse_list:
+            result = self.buildMostDeliver(row)
             result_list.append(result)
         return jsonify(WarehouseWithMostIncoming=result_list)
        
