@@ -91,7 +91,15 @@ class ITHandler:
                 return jsonify(Error="Incorrect Rack selected"), 400
             else: #if rack doesn't exist
                 print("oh holera")
-                r_id = rDAO.insertRack(data['t_quantity'], data['w_id'], data['p_id'], data['t_quantity'])
+                if (sum(wDAO.getBudget(data['w_id'])) < int(data['t_value'])):
+                    return jsonify(Error="Could not purchase, budget too low"), 400
+                else:
+                    r_id = rDAO.insertRack(data['t_quantity'], data['w_id'], data['p_id'], data['t_quantity'])
+                    #rDAO.updateAmount(data['r_id'],
+                                      #data['t_quantity'])  # update amount of parts in rack and update budget
+                    wDAO.updateBudget(data['w_id'], data['t_value'])
+                    #r_id = data['r_id']
+                #r_id = rDAO.insertRack(data['t_quantity'], data['w_id'], data['p_id'], data['t_quantity'])
 
 
 
