@@ -38,6 +38,16 @@ class ExchangeDAO:
         self.conn.commit()
         return id
 
+    def updateExchange(self,t_id, sender_u_id, sender_w_id, sender_p_id, sender_r_id, receiver_r_id, receiver_quantity, t_date, t_value, t_quantity, u_id, w_id, p_id):
+        cursor = self.conn.cursor()
+        query = 'update transactions set t_date = %s, t_value = %s, t_quantity = %s, p_id = %s, w_id = %s, u_id = %s where t_id = %s'
+        cursor.execute(query, (t_date, t_value, t_quantity, p_id, w_id, u_id, t_id))
+        self.conn.commit()
+        query = 'update exchange set sender_u_id = %s, sender_w_id = %s, sender_p_id = %s, sender_r_id = %s, receiver_r_id = %s, reciever_quantity = %s  where t_id = %s'
+        cursor.execute(query, (sender_u_id, sender_w_id, sender_p_id, sender_r_id, receiver_r_id, receiver_quantity, t_id))
+        self.conn.commit()
+        return t_id
+
 
 
 

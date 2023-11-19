@@ -126,7 +126,47 @@ class ExchangeHandler:
         else:
             jsonify(Error="Unexpected attributes in post Request"), 400
 
+    def updateExchange(self,t_id, data):
+        uDAO = UserDAO()  # if user belongs to warehouse
+        rDAO = RacksDao()  # if rack exists in warehouse (create it if not)
+        wDAO = warehouseDAO()  # if rack exists in warehouse, if warehouse had budget to make purchase
+        pDAO = PartsDAO()
+        if not uDAO.getUserById(data['u_id']) or not uDAO.getUserById(data['sender_u_id']):  # if user exist
+            return jsonify(Error="User doesn't exist"), 400
+        if not uDAO.inWarehouse(data['u_id'], data['w_id']) or not uDAO.inWarehouse(data['sender_u_id'],
+                                                                                    data['sender_w_id']):
+            return jsonify(Error="User not part of warehouse"), 400
+        if not wDAO.getWarehouseById(data['w_id']) or not wDAO.getWarehouseById(
+                data['sender_w_id']):  # if warehouse exist
+            return jsonify(Error="Warehouse doesn't exist"), 400
+        if not pDAO.getPart(data['p_id']) or not pDAO.getPart(data['sender_p_id']):  # if part exists
+            return jsonify(Error="Part doesn't exist"), 400
 
+        sender_u_id = data['sender_u_id']
+        sender_w_id = data['sender_w_id']
+        sender_p_id = data['sender_p_id']
+        sender_r_id = data['sender_r_id']
+        receiver_r_id = data['receiver_r_id']
+        receiver_quantity = data['receiver_quantity']
+        t_date = data['t_date']
+        t_value = data['t_value']
+        t_quantity = data['t_quantity']
+        u_id = data['u_id']
+        w_id = data['w_id']
+        p_id = data['p_id']
+        #t_id = data['t_id']
+        tDAO = transactionDAO()
+        ##t_id = tDAO.insertTransaction(data['t_date'], data['t_value'], data['t_quantity'], data['u_id'], data['w_id'],
+                                      #data['p_id'])
+        if t_id and t_value and t_date and t_quantity and sender_u_id and sender_w_id and sender_p_id and sender_r_id and receiver_r_id and receiver_quantity:
+            dao = ExchangeDAO()
+            ExchangeDAO().updateExchange(t_id, sender_u_id, sender_w_id, sender_p_id, sender_r_id, receiver_r_id, receiver_quantity, t_date, t_value, t_quantity, u_id, w_id, p_id)
+            result = self.buildExchangeAttributes(t_id, sender_u_id, sender_w_id, sender_p_id, sender_r_id,
+                                                  receiver_r_id, receiver_quantity, t_date, t_value, t_quantity, u_id,
+                                                  w_id, p_id)
+            return jsonify(Exchange_Transactions=result), 201
+        else:
+            jsonify(Error="Unexpected attributes in post Request"), 400
 
 
 
