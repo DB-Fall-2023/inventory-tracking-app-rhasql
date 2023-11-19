@@ -57,3 +57,25 @@ class SuppliersDAO:
         count = cursor.rowcount
         self.conn.commit()
         return count
+
+    def supplies(self, s_id, p_id):
+        cursor = self.conn.cursor()
+        query = "select s_id from supplies where s_id = %s and p_id = %s"
+        cursor.execute(query, (s_id, p_id))
+        result = cursor.fetchone()
+        return result
+
+    def getStock(self, s_id, p_id):
+        cursor = self.conn.cursor()
+        query = "select stock from supplies where s_id = %s and p_id = %s"
+        cursor.execute(query, (s_id, p_id))
+        result = cursor.fetchone()
+        return result
+
+    def updateStock(self,s_id, p_id, amount):
+        cursor = self.conn.cursor()
+        query = "update supplies set stock = stock - %s where s_id = %s and p_id = %s"
+        cursor.execute(query, (amount,s_id, p_id))
+        count = cursor.rowcount
+        self.conn.commit()
+        return count
