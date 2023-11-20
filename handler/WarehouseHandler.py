@@ -70,6 +70,11 @@ class WarehouseHandler:
         result['User id'] = data[0]
         result['Exchanges recieved'] = data[1]
         return result
+
+    def buildProfit(self, data):
+        result = {}
+        result['Profit'] = data[0]
+        return result
     
     def getAllWarehouses(self):
         dao = warehouseDAO()
@@ -184,12 +189,12 @@ class WarehouseHandler:
             return jsonify(Error="Warehouse doesn't exist"), 404
         if not uDAO.inWarehouse(data['u_id'], w_id):
             return jsonify(Error="User not part of warehouse"), 400
-        #dao = warehouseDAO()
         dtuples = dao.getProfit(w_id)
-        result = []
-        for x in dtuples:
-            result.append(x)
-        return jsonify(profit=result)
+        result_list = []
+        for row in dtuples:
+            result = self.buildProfit(row)
+            result_list.append(result)
+        return jsonify(WarehouseProfit=result_list)
     def getLeastTransactions(self, w_id, data):
         uDAO = UserDAO()
         dao = warehouseDAO()
