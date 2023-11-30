@@ -46,3 +46,12 @@ class PartsDAO:
         cursor.execute(query,(p_id,))
         self.conn.commit()
         return p_id
+    def getPrice(self):
+        cursor = self.conn.cursor()
+        query = ("Select p_name, p_price "
+                 "From parts")
+        cursor.execute(query)
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result

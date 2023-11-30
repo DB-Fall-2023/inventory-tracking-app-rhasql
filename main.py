@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS, cross_origin
 from handler.PartHandler import PartHandler
 from handler.UserHandler import UserHandler
@@ -9,6 +9,8 @@ from handler.WarehouseHandler import WarehouseHandler
 from handler.itHandler import ITHandler
 from handler.otHandler import OTHandler
 from handler.exchangeHandler import ExchangeHandler
+from subprocess import Popen
+import matplotlib.pyplot as plt
 app = Flask(__name__)
 
 CORS(app)
@@ -281,6 +283,14 @@ def getMostRacks():
         return WarehouseHandler().getMostRacks()
     else: #catches any other methods
         return jsonify(Error="Method not allowed"), 405
+
+@app.route('/rhasql/partPrice', methods=['GET'])
+def getAllPrice():
+     if request.method == 'GET':
+         Popen(['voila', 'JupyterNotebooks/partPrice.ipynb'])
+         return render_template('test.html')
+#     else: #catches any other methods
+#         return jsonify(Error="Method not allowed"), 405
 
 if __name__ == '__main__':
     app.run(debug=True)
