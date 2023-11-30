@@ -1,6 +1,7 @@
 #WILL CONTINUE TO COMMENT CODE LATER
 from flask import jsonify
 from DAO.partsDAO import PartsDAO
+from matplotlib import pyplot as plt
 class PartHandler:
 
     # Costructs dictionary of attributes
@@ -23,6 +24,12 @@ class PartHandler:
         result['p_type'] = p_type
         result['p_color'] = p_color
         result['p_weight'] = p_weight
+        return result
+
+    def buildPprice(self, data):
+        result = {}
+        result['p_name'] = data[0]
+        result['p_price'] = data[1]
         return result
 
     #Gets all parts in parts table
@@ -95,3 +102,19 @@ class PartHandler:
         else:
             p_id = dao.deletePart(p_id)
             return jsonify(DeleteStatus = "OK"), 200
+
+    def getPrice(self):
+        dao = PartsDAO()
+        ppJson = dao.getPrice()
+        pName = []
+        pPrice = []
+        result = []
+        for x in ppJson:
+            result.append(PartHandler().buildPprice(x))
+        for y in result:
+            pName.append(y['p_name'])
+            pPrice.append(y['p_price'])
+        plt.bar(range(0, len(pPrice)), pPrice)
+        plt.xticks(range(0, len(pName)), pName)
+        plt.show()
+        return jsonify(result)
