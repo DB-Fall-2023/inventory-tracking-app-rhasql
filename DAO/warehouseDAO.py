@@ -160,9 +160,9 @@ class warehouseDAO:
         return result
     def getLeastOutgoing(self):
         cursor = self.conn.cursor()
-        query = ("Select w_id, count(*) "
-                 "from transactions natural inner join outgoing_transactions "
-                 "group by w_id "
+        query = ("Select w_name, count(*) "
+                 "from warehouse natural inner join transactions natural inner join outgoing_transactions "
+                 "group by w_name "
                  "order by count(*) asc "
                  "limit 3")
         cursor.execute(query)
@@ -207,9 +207,9 @@ class warehouseDAO:
 
     def getMostIncoming(self):
         cursor = self.conn.cursor()
-        query = ("Select w_id, count(*) "
-                 "from transactions natural inner join incoming_transactions "
-                 "group by w_id "
+        query = ("Select w_name, count(*) "
+                 "from warehouse natural inner join transactions natural inner join incoming_transactions "
+                 "group by w_name "
                  "order by count(*) desc "
                  "limit 5")
         cursor.execute(query)
@@ -246,9 +246,9 @@ class warehouseDAO:
 
     def getMostRacks(self):
         cursor = self.conn.cursor()
-        query = ("select w_id, count(*) "
+        query = ("select w_name, count(*) "
                  "from warehouse natural inner join racks "
-                 "group by w_id "
+                 "group by w_name "
                  "order by count(*) "
                  "desc limit 10")
         cursor.execute(query)

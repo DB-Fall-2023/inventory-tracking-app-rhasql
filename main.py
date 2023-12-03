@@ -246,6 +246,7 @@ def getReceivesMost(w_id):
 @app.route('/rhasql/most/transactions', methods = ['GET'])
 def getMostUserTransactions():
     if request.method == 'GET':
+        Popen(['voila', 'JupyterNotebooks/mostUserTransactions.ipynb'])
         return UserHandler().getMostUserTransactions()
     else: #catches any other methods
         return jsonify(Error="Method not allowed."), 405
@@ -253,6 +254,7 @@ def getMostUserTransactions():
 @app.route('/rhasql/least/outgoing', methods = ['GET'])
 def getLeastOutgoing():
     if request.method == 'GET':
+        Popen(['voila', 'JupyterNotebooks/leastOutgoing.ipynb'])
         return WarehouseHandler().getLeastOutgoing()
     else: #catches any other methods
         return jsonify(Error="Method not allowed."), 405
@@ -261,6 +263,7 @@ def getLeastOutgoing():
 @app.route('/rhasql/most/incoming', methods=['GET'])
 def getMostIncoming():
     if request.method == 'GET':
+        Popen(['voila', 'JupyterNotebooks/mostIncoming.ipynb'])
         return WarehouseHandler().getMostIncoming()
     else: #catches any other methods
         return jsonify(Error="Method not allowed."), 405
@@ -268,18 +271,21 @@ def getMostIncoming():
 @app.route('/rhasql/most/city', methods=['GET'])
 def getMostCities():
     if request.method == 'GET':
+        Popen(['voila', 'JupyterNotebooks/mostCity.ipynb'])
         return WarehouseHandler().getMostCities()
     else: #catches any other methods
         return jsonify(Error="Method not allowed."), 405
 @app.route('/rhasql/most/deliver', methods=['GET'])
 def getMostDeliver():
     if request.method == 'GET':
+        Popen(['voila', 'JupyterNotebooks/mostDELIVER.ipynb'])
         return WarehouseHandler().getMostDeliver()
     else: #catches any other methods
         return jsonify(Error="Method not allowed."), 405
 @app.route('/rhasql/most/rack', methods=['GET'])
 def getMostRacks():
     if request.method == 'GET':
+        Popen(['voila', 'JupyterNotebooks/mostRack.ipynb'])
         return WarehouseHandler().getMostRacks()
     else: #catches any other methods
         return jsonify(Error="Method not allowed"), 405
