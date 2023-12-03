@@ -62,9 +62,9 @@ class UserDAO:
 
     def getMostUserTransactions(self):
         cursor = self.conn.cursor()
-        query = ('Select u_id, count(*) '
-                 'from transactions '
-                 'group by u_id '
+        query = ('Select fname, count(*) '
+                 'from transactions natural inner join wuser '
+                 'group by fname '
                  'order by count(*) desc '
                  'LIMIT 3')
         cursor.execute(query)
