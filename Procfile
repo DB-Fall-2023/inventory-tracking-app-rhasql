@@ -1,1 +1,2 @@
-web: gunicorn -w 4 -b 0.0.0.0:$PORT main:app
+web: gunicorn main:app
+web: voila --port=$PORT --Voila.ip=0.0.0.0 --no-browser --template=material --enable_nbextensions=True JupyterNotebooks/*.ipynb
