@@ -9,6 +9,7 @@ from handler.WarehouseHandler import WarehouseHandler
 from handler.itHandler import ITHandler
 from handler.otHandler import OTHandler
 from handler.exchangeHandler import ExchangeHandler
+import subprocess
 from subprocess import Popen
 import matplotlib.pyplot as plt
 app = Flask(__name__)
@@ -293,7 +294,8 @@ def getMostRacks():
 @app.route('/rhasql/partPrice', methods=['GET'])
 def getAllPrice():
      if request.method == 'GET':
-         Popen(['voila', 'JupyterNotebooks/partPrice.ipynb'])
+         subprocess.run(['voila','--no-browser','JupyterNotebooks/partPrice.ipynb'])
+         #Popen(['voila', 'JupyterNotebooks/partPrice.ipynb'])
          return render_template('test.html')
 #     else: #catches any other methods
 #         return jsonify(Error="Method not allowed"), 405
