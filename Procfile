@@ -1,1 +1,1 @@
-web: gunicorn main:app & voila --port=$PORT JupyterNotebooks/*.ipynb --no-browser
+web: gunicorn main:app && voila --port=$PORT JupyterNotebooks/*.ipynb --no-browser
