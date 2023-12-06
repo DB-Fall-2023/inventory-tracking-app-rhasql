@@ -1,2 +1,2 @@
 web: gunicorn main:app
-voila: voila JupyterNotebooks/*.ipynb --port=$PORT --Voila.ip=0.0.0.0 --no-browser --template=material --enable_nbextensions=True
+voila: voila JupyterNotebooks/partPrice.ipynb JupyterNotebooks/mostCity.ipynb JupyterNotebooks/mostDELIVER.ipynb JupyterNotebooks/mostIncoming.ipynb  --port=$PORT --Voila.ip=0.0.0.0 --no-browser --template=material
