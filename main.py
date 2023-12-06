@@ -10,6 +10,7 @@ from handler.itHandler import ITHandler
 from handler.otHandler import OTHandler
 from handler.exchangeHandler import ExchangeHandler
 from subprocess import Popen
+import subprocess
 import time
 
 app = Flask(__name__)
@@ -294,10 +295,11 @@ def getMostRacks():
 @app.route('/rhasql/partPrice', methods=['GET'])
 def getAllPrice():
      if request.method == 'GET':
-         #subprocess.run(['voila','--no-browser','JupyterNotebooks/partPrice.ipynb'])
+         subprocess.run(['voila','--no-browser','JupyterNotebooks/partPrice.ipynb'])
 
-         command = ['voila', '--port=8862', 'JupyterNotebooks/partPrice.ipynb', '--Voila.tornado_settings={"headers": {"Content-Security-Policy": "frame-ancestors *"}}']
-         Popen(command)
+         #command = ['voila', '--port=8862', '--no-browser', 'JupyterNotebooks/partPrice.ipynb', '--Voila.tornado_settings={"headers": {"Content-Security-Policy": "frame-ancestors *"}}']
+         #Popen(command)
+         #print(Popen(command))
          return render_template('test.html')
 #     else: #catches any other methods
 #         return jsonify(Error="Method not allowed"), 405
