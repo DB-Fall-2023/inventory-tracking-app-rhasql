@@ -295,7 +295,7 @@ def getMostRacks():
 @app.route('/rhasql/partPrice', methods=['GET'])
 def getAllPrice():
      if request.method == 'GET':
-         subprocess.run(['voila','--no-browser','JupyterNotebooks/partPrice.ipynb'])
+         Popen(['voila','--no-browser','JupyterNotebooks/partPrice.ipynb'])
 
          #command = ['voila', '--port=8862', '--no-browser', 'JupyterNotebooks/partPrice.ipynb', '--Voila.tornado_settings={"headers": {"Content-Security-Policy": "frame-ancestors *"}}']
          #Popen(command)
