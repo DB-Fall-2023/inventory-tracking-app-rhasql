@@ -1,1 +1,1 @@
-web: gunicorn main:app && voila --port=$PORT --host=0.0.0.0 JupyterNotebooks/*.ipynb --no-browser
+web: gunicorn main:app && voila --port=$PORT --Voila.ip=0.0.0.0 --no-browser --template=material --enable_nbextensions=True JupyterNotebooks/bqplot.ipynb
