@@ -17,6 +17,7 @@ app = Flask(__name__)
 
 CORS(app)
 
+Popen(['voila', '--port=8863','--no-browser','JupyterNotebooks/partPrice.ipynb'])
 @app.route('/')
 def greeting():
     return 'This is a DB test' #left for testing purposes
@@ -295,10 +296,10 @@ def getMostRacks():
 @app.route('/rhasql/partPrice', methods=['GET'])
 def getAllPrice():
      if request.method == 'GET':
-         Popen(['voila', '--port=8862','--no-browser','JupyterNotebooks/partPrice.ipynb'])
+         #Popen(['voila', '--port=8862','--no-browser','JupyterNotebooks/partPrice.ipynb'])
 
-         #command = ['voila', '--port=8862', '--no-browser', 'JupyterNotebooks/partPrice.ipynb', '--Voila.tornado_settings={"headers": {"Content-Security-Policy": "frame-ancestors *"}}']
-         #Popen(command)
+         command = ['voila', '--port=8862', '--no-browser', 'JupyterNotebooks/partPrice.ipynb', '--Voila.tornado_settings={"headers": {"Content-Security-Policy": "frame-ancestors *"}}']
+         Popen(command)
          #print(Popen(command))
          return render_template('test.html')
 #     else: #catches any other methods
