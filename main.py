@@ -10,7 +10,6 @@ from handler.itHandler import ITHandler
 from handler.otHandler import OTHandler
 from handler.exchangeHandler import ExchangeHandler
 from subprocess import Popen
-import os
 import subprocess
 import time
 
@@ -296,20 +295,17 @@ def getMostRacks():
 @app.route('/rhasql/partPrice', methods=['GET'])
 def getAllPrice():
      if request.method == 'GET':
-         Popen(['voila', '--port=8862','--no-browser','JupyterNotebooks/partPrice.ipynb'])
+         #Popen(['voila', '--port=8862','--no-browser','JupyterNotebooks/partPrice.ipynb'])
 
          command = ['voila', '--port=8862', '--no-browser', 'JupyterNotebooks/partPrice.ipynb', '--Voila.tornado_settings={"headers": {"Content-Security-Policy": "frame-ancestors *"}}']
          Popen(command)
          #print(Popen(command))
-         heroku_app_url = f"https://{os.environ['HEROKU_APP_NAME']}.herokuapp.com"
-         voila_url = f"{heroku_app_url}:8866/"
-         return render_template('test.html', voila_url=voila_url)
+         return render_template('test.html')
 #     else: #catches any other methods
 #         return jsonify(Error="Method not allowed"), 405
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(debug=True)
 
 
 
