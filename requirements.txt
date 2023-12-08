@@ -40,3 +40,6 @@ typing-inspect==0.8.0
 typing_extensions==4.5.0
 Werkzeug==3.0.1
 zipp==3.17.0
+matplotlib==3.8.2
+voila==0.5.5
+ipympl==0.9.3

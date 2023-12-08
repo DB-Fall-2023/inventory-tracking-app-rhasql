@@ -1,5 +1,5 @@
-from flask import Flask, jsonify, request, render_template
-from flask_cors import CORS, cross_origin
+from flask import Flask, jsonify, request, render_template, make_response
+from flask_cors import CORS
 from handler.PartHandler import PartHandler
 from handler.UserHandler import UserHandler
 from handler.RacksHandler import RacksHandler
@@ -9,9 +9,10 @@ from handler.WarehouseHandler import WarehouseHandler
 from handler.itHandler import ITHandler
 from handler.otHandler import OTHandler
 from handler.exchangeHandler import ExchangeHandler
-import subprocess
 from subprocess import Popen
-import matplotlib.pyplot as plt
+import subprocess
+import time
+
 app = Flask(__name__)
 
 CORS(app)
@@ -304,6 +305,7 @@ def getMostRacks():
 @app.route('/rhasql/partPrice', methods=['GET'])
 def getAllPrice():
      if request.method == 'GET':
+
          #subprocess.run(['voila','--no-browser','J)upyterNotebooks/partPrice.ipynb'])
          Popen(['voila', 'JupyterNotebooks/partPrice.ipynb'])
          return render_template('templates/test.html')
@@ -333,6 +335,15 @@ def getWarehouseParts(w_id):
         return WarehouseHandler().getWarehouseParts(w_id)
     else:
         return jsonify(Error="Method not allowed"), 405
+         #Popen(['voila','--no-browser','JupyterNotebooks/partPrice.ipynb'])
+
+         command = ['voila', '--port=8862', '--no-browser', 'JupyterNotebooks/partPrice.ipynb', '--Voila.tornado_settings={"headers": {"Content-Security-Policy": "frame-ancestors *"}}']
+         Popen(command)
+         #print(Popen(command))
+         return render_template('test.html')
+#     else: #catches any other methods
+#         return jsonify(Error="Method not allowed"), 405
+
 if __name__ == '__main__':
     app.run(debug=True)
 
