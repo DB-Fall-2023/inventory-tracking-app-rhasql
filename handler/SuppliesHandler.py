@@ -13,6 +13,11 @@ class SuppliesHandler:
         return result
 
     # Costructs dictionary of attributes
+    def mapDictSupplied(self, t):
+        result = {}
+        result['p_name'] = t[0]
+        result['stock'] = t[1]
+        return result
     def build_supplies_attributes(self, p_id, s_id, stock):
         result = {}
         result['p_id'] = p_id
@@ -86,3 +91,15 @@ class SuppliesHandler:
         else:
             ids = dao.deleteSupplies(p_id,s_id)
             return jsonify(DeleteStatus="OK"), 200
+
+    def getSupplierSupplies(self, s_id):
+        dao = SuppliesDAO()
+        sDAO = SuppliersDAO()
+        if not sDAO.searchById(s_id):
+            return jsonify(Error="Supplier doesn't exist"), 402
+        else:
+            dtuples = dao.getSupplierSupplies(s_id)
+            result = []
+            for x in dtuples:
+                result.append(self.mapDictSupplied(x))
+            return jsonify(result)

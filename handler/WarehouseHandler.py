@@ -2,6 +2,9 @@ from flask import jsonify
 from DAO.warehouseDAO import warehouseDAO
 from handler.RacksHandler import RacksHandler
 from DAO.userDAO import UserDAO
+from handler.itHandler import ITHandler
+from handler.otHandler import OTHandler
+from handler.exchangeHandler import ExchangeHandler
 
 class WarehouseHandler:
     def build_warehouse(self, t):
@@ -10,6 +13,12 @@ class WarehouseHandler:
         result['w_name'] = t[1]
         result['w_location'] = t[2]
         result['w_budget']= t[3]
+        return result
+
+    def build_wp(self, t):
+        result = {}
+        result['p_name'] = t[0]
+        result['r_amount'] = t[1]
         return result
 
     def build_warehouse_attributes(self, w_id, w_name, w_location, w_budget):
@@ -40,6 +49,12 @@ class WarehouseHandler:
         result['warehouse id'] = data[0]
         result['amount of Outgoing Transactions'] = data[1]
         return result
+
+    # def build_Least_Outgoing(self, data):
+    #     result = {}
+    #     result['warehouse id'] = data[0]
+    #     result['amount of Outgoing Transactions'] = data[1]
+    #     return result
 
     def buildMostCities(self, data):
         result = {}
@@ -257,3 +272,38 @@ class WarehouseHandler:
             result = self.buildMostRacks(row)
             result_list.append(result)
         return jsonify(WarehousesWithMostRacks=result_list)
+
+    def getAllTransactions(self, w_id):
+        dao = warehouseDAO()
+        IncomingTransactions = dao.getIncoming(w_id)
+        OutgoingTransactions = dao.getOutgoing(w_id)
+        Exchange = dao.getExchange(w_id)
+        IncomingList = []
+        OutgoingList = []
+        ExchangeList = []
+        finalList = {}
+        for row in IncomingTransactions:
+            result = ITHandler().buildIT(row)
+            IncomingList.append(result)
+        for row in OutgoingTransactions:
+            #print(row)
+            result = OTHandler().buildOT(row)
+            OutgoingList.append(result)
+        for row in Exchange:
+            result = ExchangeHandler().buildExchange(row)
+            ExchangeList.append(result)
+        finalList['Incoming Transactions'] = IncomingList
+        finalList['Outgoing Transactions'] = OutgoingList
+        finalList['Exchange'] = ExchangeList
+        return jsonify(AllTransactions=finalList)
+
+    def getWarehouseParts(self, w_id):
+        dao = warehouseDAO()
+        if not dao.getWarehouseById(w_id):
+            return jsonify(Error="Warehouse doesn't exist"), 400
+        dtup = dao.getWarehouseParts(w_id)
+        result = []
+        for x in dtup:
+            result.append(WarehouseHandler().build_wp(x))
+        return jsonify(result)
+
