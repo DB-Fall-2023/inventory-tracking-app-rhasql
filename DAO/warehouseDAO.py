@@ -256,3 +256,47 @@ class warehouseDAO:
         for row in cursor:
             result.append(row)
         return result
+
+    def getIncoming(self, w_id):
+        cursor = self.conn.cursor()
+        query = ("select t_id, t_date, t_value, t_quantity, s_id, p_id, w_id, r_id, u_id "
+                 "From transactions natural inner join warehouse natural inner join incoming_transactions "
+                 "where w_id = %s ")
+        cursor.execute(query, (w_id,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def getOutgoing(self, w_id):
+        cursor = self.conn.cursor()
+        query = ("select t_id, ot_buyername, ot_sentto, t_date, t_value, t_quantity, p_id, w_id, u_id "
+                 "From transactions natural inner join warehouse natural inner join outgoing_transactions "
+                 "where w_id = %s ")
+        cursor.execute(query, (w_id,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def getExchange(self, w_id):
+        cursor = self.conn.cursor()
+        query = ("select t_id, sender_u_id, sender_w_id, sender_p_id, sender_r_id, receiver_r_id, reciever_quantity, t_date, t_value, t_quantity, u_id, w_id, p_id "
+                 "From transactions natural inner join warehouse natural inner join exchange "
+                 "where w_id = %s ")
+        cursor.execute(query, (w_id,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+
+    def getWarehouseParts(self, w_id):
+        cursor = self.conn.cursor()
+        query = ("Select p_name, r_amount "
+                 "From racks natural inner join parts "
+                 "where w_id = %s")
+        cursor.execute(query, (w_id,))
+        result =[]
+        for row in cursor:
+            result.append(row)
+        return result

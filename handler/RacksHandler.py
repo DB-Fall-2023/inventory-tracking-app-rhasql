@@ -35,6 +35,12 @@ class RacksHandler:
         result['r_capacity'] = row[4]
         result['total_price'] = row[5]
         return result
+
+    def build_low_stock(self, row):
+        result = {}
+        result['r_id'] = row[0]
+        result['r_amount'] = row[1]
+        return result
     
     def getAllRacks(self):
         dao = RacksDao()

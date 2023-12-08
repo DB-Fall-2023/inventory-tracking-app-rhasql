@@ -54,3 +54,14 @@ class SuppliesDAO:
         query = "Select p_id from supplies where p_id = %s and s_id = %s"
         cursor.execute(query, (p_id, s_id))
         return cursor.fetchone()
+
+    def getSupplierSupplies(self, s_id):
+        cursor = self.conn.cursor()
+        query = ("Select p_name, stock "
+                 "From supplier natural inner join supplies natural inner join parts "
+                 "Where s_id = %s")
+        cursor.execute(query, (s_id,))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
