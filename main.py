@@ -10,8 +10,6 @@ from handler.itHandler import ITHandler
 from handler.otHandler import OTHandler
 from handler.exchangeHandler import ExchangeHandler
 from subprocess import Popen
-import psutil
-import os
 import subprocess
 import time
 
@@ -19,16 +17,10 @@ app = Flask(__name__)
 
 CORS(app)
 
-
-def isVoilaRunning(port):
-    for conn in psutil.net_connections(kind='inet'):
-        if conn.laddr.port == port:
-            return True
-    return False
 @app.route('/')
 def greeting():
-    #Popen(['voila', 'JupyterNotebooks/mainPage.ipynb'])
-    return render_template('index.html')
+    Popen(['voila', 'JupyterNotebooks/mainPage.ipynb'])
+    return 'This is a DB test' #left for testing purposes
 @app.route('/rhasql')
 def mainpage():
     Popen(['voila', 'JupyterNotebooks/mainStart.ipynb'])
@@ -221,93 +213,61 @@ def getProfit(w_id):
 @app.route('/rhasql/warehouse/<int:w_id>/rack/lowstock', methods = ['POST'])
 def getLowStock(w_id):
     if request.method == 'POST':
-        port = 8015
-        if (isVoilaRunning(port) == False):
-            command = ['voila', '--port=' + str(port), 'JupyterNotebooks/rlowStock.ipynb',
-                       '--Voila.tornado_settings={"headers": {"Content-Security-Policy": "frame-ancestors *"}}']
-            Popen(command)
-        return render_template('partPrice.html')
+        Popen(['voila', '--no-browser', 'JupyterNotebooks/rlowStock.ipynb'])
+        return WarehouseHandler().getLowStock(w_id, request.json)
     else: #catches any other methods
         return jsonify(Error="Method not allowed."), 405
 @app.route('/rhasql/warehouse/<int:w_id>/rack/expensive', methods = ['POST'])
 def getExpensiveRacks(w_id):
     if request.method == 'POST':
-        port = 8014
-        if (isVoilaRunning(port) == False):
-            command = ['voila', '--port=' + str(port), 'JupyterNotebooks/rackExpensive.ipynb',
-                       '--Voila.tornado_settings={"headers": {"Content-Security-Policy": "frame-ancestors *"}}']
-            Popen(command)
-        return render_template('partPrice.html')
+        Popen(['voila', '--no-browser', 'JupyterNotebooks/rackExpensive.ipynb'])
+        return WarehouseHandler().getExpensiveRacks(w_id, request.json)
     else: #catches any other methods
         return jsonify(Error="Method not allowed."), 405
 @app.route('/rhasql/warehouse/<int:w_id>/rack/material', methods = ['POST'])
 def getBottomParts(w_id):
     if request.method == 'POST':
-        port = 8013
-        if (isVoilaRunning(port) == False):
-            command = ['voila', '--port=' + str(port), 'JupyterNotebooks/BotomMaterial.ipynb',
-                       '--Voila.tornado_settings={"headers": {"Content-Security-Policy": "frame-ancestors *"}}']
-            Popen(command)
-        return render_template('partPrice.html')
+        Popen(['voila', '--no-browser', 'JupyterNotebooks/BotomMaterial.ipynb'])
+        return WarehouseHandler().getBottomParts(w_id, request.json)
     else: #catches any other methods
         return jsonify(Error="Method not allowed."), 405
 @app.route('/rhasql/warehouse/<int:w_id>/transaction/suppliers', methods = ['POST'])
 def getMostSuppliers(w_id):
     if request.method == 'POST':
-        port = 8012
-        if (isVoilaRunning(port) == False):
-            command = ['voila', '--port=' + str(port), 'JupyterNotebooks/transactionsSupplier.ipynb',
-                       '--Voila.tornado_settings={"headers": {"Content-Security-Policy": "frame-ancestors *"}}']
-            Popen(command)
-        return render_template('partPrice.html')
+        Popen(['voila', '--no-browser', 'JupyterNotebooks/transactionSuppliers.ipynb'])
+        return WarehouseHandler().getMostSuppliers(w_id, request.json)
     else: #catches any other methods
         return jsonify(Error="Method not allowed."), 405
 
 @app.route('/rhasql/warehouse/<int:w_id>/transaction/leastcost', methods = ['POST'])
 def getLeastTransactions(w_id):
     if request.method == 'POST':
-        port = 8011
-        if (isVoilaRunning(port) == False):
-            command = ['voila', '--port=' + str(port), 'JupyterNotebooks/transactionLeastcost.ipynb',
-                       '--Voila.tornado_settings={"headers": {"Content-Security-Policy": "frame-ancestors *"}}']
-            Popen(command)
-        return render_template('partPrice.html')
+        Popen(['voila', '--no-browser', 'JupyterNotebooks/transactionLeastcost.ipynb'])
+        return WarehouseHandler().getLeastTransactions(w_id, request.json)
     else: #catches any other methods
         return jsonify(Error="Method not allowed."), 405
 
 @app.route('/rhasql/warehouse/<int:w_id>/users/receivesmost', methods = ['POST'])
 def getReceivesMost(w_id):
     if request.method == 'POST':
-        port = 8010
-        if (isVoilaRunning(port) == False):
-            command = ['voila', '--port=' + str(port), 'JupyterNotebooks/userRecieves.ipynb',
-                       '--Voila.tornado_settings={"headers": {"Content-Security-Policy": "frame-ancestors *"}}']
-            Popen(command)
-        return render_template('partPrice.html')
+        Popen(['voila', '--no-browser', 'JupyterNotebooks/userRecieves.ipynb'])
+        return WarehouseHandler().getReceivesMost(w_id, request.json)
     else:
         return jsonify(Error="Method not allowed."), 405
 
 @app.route('/rhasql/most/transactions', methods = ['GET'])
 def getMostUserTransactions():
     if request.method == 'GET':
-        port = 8009
-        if (isVoilaRunning(port) == False):
-            command = ['voila', '--port=' + str(port), 'JupyterNotebooks/mostUserTransactions.ipynb',
-                       '--Voila.tornado_settings={"headers": {"Content-Security-Policy": "frame-ancestors *"}}']
-            Popen(command)
-        return render_template('partPrice.html')
+        Popen(['voila', '--no-browser', 'JupyterNotebooks/mostUserTransactions.ipynb'])
+        return UserHandler().getMostUserTransactions()
     else: #catches any other methods
         return jsonify(Error="Method not allowed."), 405
 
 @app.route('/rhasql/least/outgoing', methods = ['GET'])
 def getLeastOutgoing():
     if request.method == 'GET':
-        port = 8008
-        if (isVoilaRunning(port) == False):
-            command = ['voila', '--port=' + str(port), 'JupyterNotebooks/leastOutgoing.ipynb',
-                       '--Voila.tornado_settings={"headers": {"Content-Security-Policy": "frame-ancestors *"}}']
-            Popen(command)
-        return render_template('partPrice.html')
+        Popen(['voila', '--no-browser', 'JupyterNotebooks/leastOutgoing.ipynb'])
+        return WarehouseHandler().getLeastOutgoing()
     else: #catches any other methods
         return jsonify(Error="Method not allowed."), 405
 
@@ -315,97 +275,74 @@ def getLeastOutgoing():
 @app.route('/rhasql/most/incoming', methods=['GET'])
 def getMostIncoming():
     if request.method == 'GET':
-        port = 8007
-        if (isVoilaRunning(port) == False):
-            command = ['voila', '--port=' + str(port), 'JupyterNotebooks/mostIncoming.ipynb',
-                       '--Voila.tornado_settings={"headers": {"Content-Security-Policy": "frame-ancestors *"}}']
-            Popen(command)
-        return render_template('partPrice.html')
+        Popen(['voila', '--no-browser', 'JupyterNotebooks/mostIncoming.ipynb'])
+        return WarehouseHandler().getMostIncoming()
     else: #catches any other methods
         return jsonify(Error="Method not allowed."), 405
 
 @app.route('/rhasql/most/city', methods=['GET'])
 def getMostCities():
     if request.method == 'GET':
-        port = 8006
-        if (isVoilaRunning(port) == False):
-            command = ['voila', '--port=' + str(port), 'JupyterNotebooks/mostCity.ipynb',
-                       '--Voila.tornado_settings={"headers": {"Content-Security-Policy": "frame-ancestors *"}}']
-            Popen(command)
-        return render_template('mostCity.html')
+        Popen(['voila', '--no-browser', 'JupyterNotebooks/mostCity.ipynb'])
+        return WarehouseHandler().getMostCities()
     else: #catches any other methods
         return jsonify(Error="Method not allowed."), 405
 @app.route('/rhasql/most/deliver', methods=['GET'])
 def getMostDeliver():
     if request.method == 'GET':
-        port = 8005
-        if (isVoilaRunning(port) == False):
-            command = ['voila', '--port=' + str(port), 'JupyterNotebooks/mostDELIVER.ipynb',
-                       '--Voila.tornado_settings={"headers": {"Content-Security-Policy": "frame-ancestors *"}}']
-            Popen(command)
-        return render_template('mostDeliver.html')
+        Popen(['voila', '--no-browser', 'JupyterNotebooks/mostDELIVER.ipynb'])
+        return WarehouseHandler().getMostDeliver()
     else: #catches any other methods
         return jsonify(Error="Method not allowed."), 405
 @app.route('/rhasql/most/rack', methods=['GET'])
 def getMostRacks():
     if request.method == 'GET':
-        port = 8001
-        if (isVoilaRunning(port) == False):
-            command = ['voila', '--port=' + str(port), 'JupyterNotebooks/mostRack.ipynb',
-                       '--Voila.tornado_settings={"headers": {"Content-Security-Policy": "frame-ancestors *"}}']
-            Popen(command)
-        return render_template('mostRack.html')
+        Popen(['voila', '--no-browser', 'JupyterNotebooks/mostRack.ipynb'])
+        return WarehouseHandler().getMostRacks()
     else: #catches any other methods
         return jsonify(Error="Method not allowed"), 405
 
 @app.route('/rhasql/partPrice', methods=['GET'])
 def getAllPrice():
      if request.method == 'GET':
-         port = 8000
-         if (isVoilaRunning(port) == False):
-            command = ['voila', '--port=' + str(port), 'JupyterNotebooks/partPrice.ipynb',
-                        '--Voila.tornado_settings={"headers": {"Content-Security-Policy": "frame-ancestors *"}}']
-            Popen(command)
-         return render_template('partPrice.html')
+
+         #subprocess.run(['voila','--no-browser','J)upyterNotebooks/partPrice.ipynb'])
+         Popen(['voila', 'JupyterNotebooks/partPrice.ipynb'])
+         return render_template('templates/test.html')
      else: #catches any other methods
          return jsonify(Error="Method not allowed"), 405
 @app.route('/rhasql/warehouse/AllTransactions/<int:w_id>')
 def getAllTransactions(w_id):
     if request.method == 'GET':
-        port = 8002
-        if (isVoilaRunning(port) == False):
-            command = ['voila', '--port=' + str(port), 'JupyterNotebooks/AllTransactions.ipynb',
-                       '--Voila.tornado_settings={"headers": {"Content-Security-Policy": "frame-ancestors *"}}']
-            Popen(command)
-        return render_template('allTransactions.html')
+        Popen(['voila', '--no-browser', 'JupyterNotebooks/AllTransactions.ipynb'])
+        #return render_template('templates/test.html')
+        return WarehouseHandler().getAllTransactions(w_id)
     else:
         return jsonify(Error="Method not allowed"), 405
 @app.route('/rhasql/supplier/<int:s_id>/suppliedParts')
 def getSuppliedParts(s_id):
     if request.method == 'GET':
-        port = 8003
-        if (isVoilaRunning(port) == False):
-            command = ['voila', '--port=' + str(port), 'JupyterNotebooks/partsSupplied.ipynb',
-                       '--Voila.tornado_settings={"headers": {"Content-Security-Policy": "frame-ancestors *"}}']
-            Popen(command)
-        return render_template('suppliedParts.html')
+        Popen(['voila', '--no-browser', 'JupyterNotebooks/partsSupplied.ipynb'])
+        #return render_template('templates/test.html')
+        return SuppliesHandler().getSupplierSupplies(s_id)
     else:
-        return
+        return jsonify(Error="Method not allowed"), 405
 @app.route('/rhasql/warehouse/<int:w_id>/PartInWarehouse')
 def getWarehouseParts(w_id):
     if request.method == 'GET':
-        port = 8004
-        if (isVoilaRunning(port) == False):
-            command = ['voila', '--port=' + str(port), 'JupyterNotebooks/PartsWarehouse.ipynb',
-                       '--Voila.tornado_settings={"headers": {"Content-Security-Policy": "frame-ancestors *"}}']
-            Popen(command)
-        return render_template('partinwarehouse.html')
+        Popen(['voila', '--no-browser', 'JupyterNotebooks/PartsWarehouse.ipynb'])
+        #return render_template('templates/test.html')
+        return WarehouseHandler().getWarehouseParts(w_id)
     else:
         return jsonify(Error="Method not allowed"), 405
          #Popen(['voila','--no-browser','JupyterNotebooks/partPrice.ipynb'])
 
-
+         command = ['voila', '--port=8862', '--no-browser', 'JupyterNotebooks/partPrice.ipynb', '--Voila.tornado_settings={"headers": {"Content-Security-Policy": "frame-ancestors *"}}']
+         Popen(command)
          #print(Popen(command))
+         return render_template('test.html')
+#     else: #catches any other methods
+#         return jsonify(Error="Method not allowed"), 405
 
 if __name__ == '__main__':
     app.run(debug=True)
