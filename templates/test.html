@@ -8,23 +8,31 @@
 </head>
 <body>
 
-    <h1>Global Stats</h1>
+    <div class="navbar">
+        <img src="../static/RASHQL_Logo.jpg" alt="Logo" class="navbar-img">
+        <h1 class="navbar-h1"> Inventory Tracking </h1>
 
-    <label for="pageSelector">Select a graph to display:</label>
+    </div>
+    <div class="stats">
+<div class="dropdown-global">
+    <h1 class="global-text">Global Stats</h1>
+
+    <label for="pageSelector" class="global-text">Select a graph to display:</label>
     <select id="pageSelector" onchange="changePage()">
         <option value="http://localhost:8006/">Most Rack</option>
         <option value="http://localhost:8005/">Most Incoming</option>
         <option value="http://localhost:8004/">Most Deliver</option>
         <option value="http://localhost:8007/">Most Transaction</option>
-        <option value="http://localhost:8002/">Least Outgoing</option>
+        <option value="http://localhost:8001/">Least Outgoing</option>
         <option value="http://localhost:8003/">Most City</option>
         <option value="http://localhost:8008/">All Parts</option>
         <option value="http://localhost:8009/">Parts Supplied</option>
         <option value="http://localhost:8000/">Transaction</option>
     </select>
-
-    <iframe id="embeddedPage" src="" width="100%" height="400px"></iframe>
-
+</div>
+<div class="global-stats">
+    <iframe id="embeddedPage" src=""  class="first-frame" frameborder="0"></iframe>
+</div>
     <script>
         var defaultPage = "http://localhost:8006";
         var iframe = document.getElementById("embeddedPage");
@@ -36,11 +44,12 @@
             iframe.src = selectedPage;
         }
     </script>
+    </div>
 
+<div class="dropdown-global">
+    <h1 class="global-text">Local Stats</h1>
 
-    <h1>Local Stats</h1>
-
-    <label for="pageSelector2">Select a graph to display:</label>
+    <label for="pageSelector2" class="global-text">Select a graph to display:</label>
     <select id="pageSelector2" onchange="changePage2()">
         <option value="http://localhost:8016/">Warehouse Year Profit</option>
         <option value="http://localhost:8012/">Low Stock</option>
@@ -51,9 +60,10 @@
         <option value="http://localhost:8015/">Receives Most</option>
         <option value="http://localhost:8010/">Parts in Warehouse</option>
     </select>
-
-    <iframe id="embeddedPage2" src="" width="100%" height="400px"></iframe>
-
+</div>
+    <div class="global-stats">
+    <iframe id="embeddedPage2" src="" width="100%" height="400px" class="first-frame"></iframe>
+    </div>
     <script>
         // Set the default page to Example.com
         var defaultPage2 = "http://localhost:8016";
