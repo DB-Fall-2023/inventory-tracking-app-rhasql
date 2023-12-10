@@ -10,6 +10,7 @@ from handler.itHandler import ITHandler
 from handler.otHandler import OTHandler
 from handler.exchangeHandler import ExchangeHandler
 from subprocess import Popen
+import os
 import subprocess
 import time
 
@@ -17,13 +18,31 @@ app = Flask(__name__)
 
 CORS(app)
 
+ran = False
+@app.before_request
+def runVoilaNotebooks():
+    global ran
+    if not ran:
+        currentFolder = os.path.dirname(os.path.abspath(__file__))
+        notebooksFolder = 'JupyterNotebooks'
+        path = os.path.join(currentFolder, notebooksFolder)
+        files = os.listdir(path)
+        notebooks = [file for file in files if file.endswith('.ipynb')]
+        port = 8000
+        for notebook in notebooks:
+            nPath = os.path.join(path, notebook)
+            command = ['voila','--no-browser', '--port=' + str(port), nPath,
+                    '--Voila.tornado_settings={"headers": {"Content-Security-Policy": "frame-ancestors *"}}']
+            Popen(command)
+            port = port + 1
+    ran = True
+
+
 @app.route('/')
 def greeting():
-    Popen(['voila', 'JupyterNotebooks/mainPage.ipynb'])
-    return 'This is a DB test' #left for testing purposes
+    return render_template('test.html')
 @app.route('/rhasql')
 def mainpage():
-    Popen(['voila', 'JupyterNotebooks/mainStart.ipynb'])
     return 'This is a DB test'  # left for testing purposes
 @app.route('/rhasql/part', methods=['GET', 'POST'])
 def getAllParts():
@@ -213,28 +232,24 @@ def getProfit(w_id):
 @app.route('/rhasql/warehouse/<int:w_id>/rack/lowstock', methods = ['POST'])
 def getLowStock(w_id):
     if request.method == 'POST':
-        Popen(['voila', '--no-browser', 'JupyterNotebooks/rlowStock.ipynb'])
         return WarehouseHandler().getLowStock(w_id, request.json)
     else: #catches any other methods
         return jsonify(Error="Method not allowed."), 405
 @app.route('/rhasql/warehouse/<int:w_id>/rack/expensive', methods = ['POST'])
 def getExpensiveRacks(w_id):
     if request.method == 'POST':
-        Popen(['voila', '--no-browser', 'JupyterNotebooks/rackExpensive.ipynb'])
         return WarehouseHandler().getExpensiveRacks(w_id, request.json)
     else: #catches any other methods
         return jsonify(Error="Method not allowed."), 405
 @app.route('/rhasql/warehouse/<int:w_id>/rack/material', methods = ['POST'])
 def getBottomParts(w_id):
     if request.method == 'POST':
-        Popen(['voila', '--no-browser', 'JupyterNotebooks/BotomMaterial.ipynb'])
         return WarehouseHandler().getBottomParts(w_id, request.json)
     else: #catches any other methods
         return jsonify(Error="Method not allowed."), 405
 @app.route('/rhasql/warehouse/<int:w_id>/transaction/suppliers', methods = ['POST'])
 def getMostSuppliers(w_id):
     if request.method == 'POST':
-        Popen(['voila', '--no-browser', 'JupyterNotebooks/transactionSuppliers.ipynb'])
         return WarehouseHandler().getMostSuppliers(w_id, request.json)
     else: #catches any other methods
         return jsonify(Error="Method not allowed."), 405
@@ -242,7 +257,6 @@ def getMostSuppliers(w_id):
 @app.route('/rhasql/warehouse/<int:w_id>/transaction/leastcost', methods = ['POST'])
 def getLeastTransactions(w_id):
     if request.method == 'POST':
-        Popen(['voila', '--no-browser', 'JupyterNotebooks/transactionLeastcost.ipynb'])
         return WarehouseHandler().getLeastTransactions(w_id, request.json)
     else: #catches any other methods
         return jsonify(Error="Method not allowed."), 405
@@ -250,7 +264,6 @@ def getLeastTransactions(w_id):
 @app.route('/rhasql/warehouse/<int:w_id>/users/receivesmost', methods = ['POST'])
 def getReceivesMost(w_id):
     if request.method == 'POST':
-        Popen(['voila', '--no-browser', 'JupyterNotebooks/userRecieves.ipynb'])
         return WarehouseHandler().getReceivesMost(w_id, request.json)
     else:
         return jsonify(Error="Method not allowed."), 405
@@ -258,7 +271,6 @@ def getReceivesMost(w_id):
 @app.route('/rhasql/most/transactions', methods = ['GET'])
 def getMostUserTransactions():
     if request.method == 'GET':
-        Popen(['voila', '--no-browser', 'JupyterNotebooks/mostUserTransactions.ipynb'])
         return UserHandler().getMostUserTransactions()
     else: #catches any other methods
         return jsonify(Error="Method not allowed."), 405
@@ -266,7 +278,6 @@ def getMostUserTransactions():
 @app.route('/rhasql/least/outgoing', methods = ['GET'])
 def getLeastOutgoing():
     if request.method == 'GET':
-        Popen(['voila', '--no-browser', 'JupyterNotebooks/leastOutgoing.ipynb'])
         return WarehouseHandler().getLeastOutgoing()
     else: #catches any other methods
         return jsonify(Error="Method not allowed."), 405
@@ -275,7 +286,6 @@ def getLeastOutgoing():
 @app.route('/rhasql/most/incoming', methods=['GET'])
 def getMostIncoming():
     if request.method == 'GET':
-        Popen(['voila', '--no-browser', 'JupyterNotebooks/mostIncoming.ipynb'])
         return WarehouseHandler().getMostIncoming()
     else: #catches any other methods
         return jsonify(Error="Method not allowed."), 405
@@ -283,21 +293,18 @@ def getMostIncoming():
 @app.route('/rhasql/most/city', methods=['GET'])
 def getMostCities():
     if request.method == 'GET':
-        Popen(['voila', '--no-browser', 'JupyterNotebooks/mostCity.ipynb'])
         return WarehouseHandler().getMostCities()
     else: #catches any other methods
         return jsonify(Error="Method not allowed."), 405
 @app.route('/rhasql/most/deliver', methods=['GET'])
 def getMostDeliver():
     if request.method == 'GET':
-        Popen(['voila', '--no-browser', 'JupyterNotebooks/mostDELIVER.ipynb'])
         return WarehouseHandler().getMostDeliver()
     else: #catches any other methods
         return jsonify(Error="Method not allowed."), 405
 @app.route('/rhasql/most/rack', methods=['GET'])
 def getMostRacks():
     if request.method == 'GET':
-        Popen(['voila', '--no-browser', 'JupyterNotebooks/mostRack.ipynb'])
         return WarehouseHandler().getMostRacks()
     else: #catches any other methods
         return jsonify(Error="Method not allowed"), 405
@@ -305,42 +312,28 @@ def getMostRacks():
 @app.route('/rhasql/partPrice', methods=['GET'])
 def getAllPrice():
      if request.method == 'GET':
-
-         #subprocess.run(['voila','--no-browser','J)upyterNotebooks/partPrice.ipynb'])
-         Popen(['voila', 'JupyterNotebooks/partPrice.ipynb'])
          return render_template('templates/test.html')
      else: #catches any other methods
          return jsonify(Error="Method not allowed"), 405
 @app.route('/rhasql/warehouse/AllTransactions/<int:w_id>')
 def getAllTransactions(w_id):
     if request.method == 'GET':
-        Popen(['voila', '--no-browser', 'JupyterNotebooks/AllTransactions.ipynb'])
-        #return render_template('templates/test.html')
         return WarehouseHandler().getAllTransactions(w_id)
     else:
         return jsonify(Error="Method not allowed"), 405
 @app.route('/rhasql/supplier/<int:s_id>/suppliedParts')
 def getSuppliedParts(s_id):
     if request.method == 'GET':
-        Popen(['voila', '--no-browser', 'JupyterNotebooks/partsSupplied.ipynb'])
-        #return render_template('templates/test.html')
         return SuppliesHandler().getSupplierSupplies(s_id)
     else:
         return jsonify(Error="Method not allowed"), 405
 @app.route('/rhasql/warehouse/<int:w_id>/PartInWarehouse')
 def getWarehouseParts(w_id):
     if request.method == 'GET':
-        Popen(['voila', '--no-browser', 'JupyterNotebooks/PartsWarehouse.ipynb'])
-        #return render_template('templates/test.html')
         return WarehouseHandler().getWarehouseParts(w_id)
     else:
         return jsonify(Error="Method not allowed"), 405
-         #Popen(['voila','--no-browser','JupyterNotebooks/partPrice.ipynb'])
 
-         command = ['voila', '--port=8862', '--no-browser', 'JupyterNotebooks/partPrice.ipynb', '--Voila.tornado_settings={"headers": {"Content-Security-Policy": "frame-ancestors *"}}']
-         Popen(command)
-         #print(Popen(command))
-         return render_template('test.html')
 #     else: #catches any other methods
 #         return jsonify(Error="Method not allowed"), 405
 
