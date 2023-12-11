@@ -57,7 +57,7 @@ class SupplierHandler:
             return jsonify(Error="Supplier Not Found"), 404
 
     def updateById(self, sid, data):
-        if len(data) != 3:
+        if len(data) != 3 or not SupplierHandler().searchById(sid):
             return jsonify(Error="Malformed request"), 404
         name = data['Name']
         city = data['City']

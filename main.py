@@ -40,6 +40,7 @@ def runVoilaNotebooks():
 
 @app.route('/')
 def greeting():
+    Popen(['voila', 'JupyterNotebooks/warehouseProfit.ipynb'])
     return render_template('test.html')
 @app.route('/rhasql')
 def mainpage():
@@ -137,6 +138,8 @@ def getAllSupplies():
         return SuppliesHandler().addSupplies(request.json)
     elif request.method == 'GET':
         return SuppliesHandler().getAllSupplies()
+        #Popen['voila', 'JupyterNotebooks/PartsWarehouse.ipynb']
+
     else:
         return jsonify("Not supported"), 405
 @app.route('/rhasql/supplies/<int:p_id>,<int:s_id>',methods=['GET','PUT', 'DELETE'])
@@ -222,49 +225,63 @@ def getExchangeById(ex_id):
     else: #catches any other methods
         return jsonify(Error="Method not allowed."), 405
 
-@app.route('/rhasql/warehouse/<int:w_id>/profit', methods = ['POST'])
+@app.route('/rhasql/warehouse/<int:w_id>/profit', methods = ['POST', 'GET'])
 def getProfit(w_id):
     if request.method == 'POST':
         return WarehouseHandler().getProfit(w_id, request.json)
+    elif request.method == 'GET':
+        return WarehouseHandler().GetProfit(w_id)
     else:  # catches any other methods
         return jsonify(Error="Method not allowed."), 405
 
-@app.route('/rhasql/warehouse/<int:w_id>/rack/lowstock', methods = ['POST'])
+@app.route('/rhasql/warehouse/<int:w_id>/rack/lowstock', methods = ['POST', 'GET'])
 def getLowStock(w_id):
     if request.method == 'POST':
         return WarehouseHandler().getLowStock(w_id, request.json)
+    elif request.method == 'GET':
+        return WarehouseHandler().GetLowStock(w_id)
     else: #catches any other methods
         return jsonify(Error="Method not allowed."), 405
-@app.route('/rhasql/warehouse/<int:w_id>/rack/expensive', methods = ['POST'])
+@app.route('/rhasql/warehouse/<int:w_id>/rack/expensive', methods = ['POST', 'GET'])
 def getExpensiveRacks(w_id):
     if request.method == 'POST':
         return WarehouseHandler().getExpensiveRacks(w_id, request.json)
+    elif request.method == 'GET':
+        return WarehouseHandler().GetExpensiveRacks(w_id)
     else: #catches any other methods
         return jsonify(Error="Method not allowed."), 405
-@app.route('/rhasql/warehouse/<int:w_id>/rack/material', methods = ['POST'])
+@app.route('/rhasql/warehouse/<int:w_id>/rack/material', methods = ['POST', 'GET'])
 def getBottomParts(w_id):
     if request.method == 'POST':
         return WarehouseHandler().getBottomParts(w_id, request.json)
+    elif request.method == 'GET':
+        return WarehouseHandler().GetBottomParts(w_id)
     else: #catches any other methods
         return jsonify(Error="Method not allowed."), 405
-@app.route('/rhasql/warehouse/<int:w_id>/transaction/suppliers', methods = ['POST'])
+@app.route('/rhasql/warehouse/<int:w_id>/transaction/suppliers', methods = ['POST', 'GET'])
 def getMostSuppliers(w_id):
     if request.method == 'POST':
         return WarehouseHandler().getMostSuppliers(w_id, request.json)
+    elif request.method == 'GET':
+        return WarehouseHandler().GetMostSuppliers(w_id)
     else: #catches any other methods
         return jsonify(Error="Method not allowed."), 405
 
-@app.route('/rhasql/warehouse/<int:w_id>/transaction/leastcost', methods = ['POST'])
+@app.route('/rhasql/warehouse/<int:w_id>/transaction/leastcost', methods = ['POST', 'GET'])
 def getLeastTransactions(w_id):
     if request.method == 'POST':
         return WarehouseHandler().getLeastTransactions(w_id, request.json)
+    elif request.method == 'GET':
+        return WarehouseHandler().GetLeastTransactions(w_id)
     else: #catches any other methods
         return jsonify(Error="Method not allowed."), 405
 
-@app.route('/rhasql/warehouse/<int:w_id>/users/receivesmost', methods = ['POST'])
+@app.route('/rhasql/warehouse/<int:w_id>/users/receivesmost', methods = ['POST', 'GET'])
 def getReceivesMost(w_id):
     if request.method == 'POST':
         return WarehouseHandler().getReceivesMost(w_id, request.json)
+    elif request.method == 'GET':
+        return WarehouseHandler().GetReceivesMost(w_id)
     else:
         return jsonify(Error="Method not allowed."), 405
 

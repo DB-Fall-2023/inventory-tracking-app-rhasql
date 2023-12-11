@@ -154,6 +154,19 @@ class WarehouseHandler:
             result.append(RacksHandler().build_racks(x))
         return jsonify(Low_Stock=result)
 
+    def GetLowStock(self, w_id):
+        dao = warehouseDAO()
+        #uDAO = UserDAO()
+        #if not uDAO.inWarehouse(data['u_id'], w_id):
+         #   return jsonify(Error="User not part of warehouse"), 400
+        if not dao.getWarehouseById(w_id):
+            return jsonify(Error = "Warehouse doesn't exist"), 404
+        dtuples = dao.getLowStock(w_id)
+        result = []
+        for x in dtuples:
+            result.append(RacksHandler().build_racks(x))
+        return jsonify(Low_Stock=result)
+
     def getExpensiveRacks(self, w_id, data):
         uDAO = UserDAO()
         dao = warehouseDAO()
@@ -166,6 +179,17 @@ class WarehouseHandler:
         for x in dtuples:
             result.append(RacksHandler().build_expensive_racks(x))
         return jsonify(Most_Expensive=result)
+
+    def GetExpensiveRacks(self, w_id):
+        uDAO = UserDAO()
+        dao = warehouseDAO()
+        if not dao.getWarehouseById(w_id):
+            return jsonify(Error = "Warehouse doesn't exist"), 404
+        dtuples = dao.getExpensive(w_id)
+        result = []
+        for x in dtuples:
+            result.append(RacksHandler().build_expensive_racks(x))
+        return jsonify(Most_Expensive=result)
     def getBottomParts(self, w_id, data):
         uDAO = UserDAO()
         dao = warehouseDAO()
@@ -173,6 +197,20 @@ class WarehouseHandler:
             return jsonify(Error="Warehouse doesn't exist"), 404
         if not uDAO.inWarehouse(data['u_id'], w_id):
             return jsonify(Error="User not part of warehouse"), 400
+        #dao = warehouseDAO()
+        dtuples = dao.getBottomParts(w_id)
+        result = []
+        for x in dtuples:
+            result.append(WarehouseHandler().buildLowMaterial(x))
+        return jsonify(Lowest_ptype=result)
+
+    def GetBottomParts(self, w_id):
+        #uDAO = UserDAO()
+        dao = warehouseDAO()
+        if not dao.getWarehouseById(w_id):
+            return jsonify(Error="Warehouse doesn't exist"), 404
+        # if not uDAO.inWarehouse(data['u_id'], w_id):
+        #     return jsonify(Error="User not part of warehouse"), 400
         #dao = warehouseDAO()
         dtuples = dao.getBottomParts(w_id)
         result = []
@@ -192,6 +230,20 @@ class WarehouseHandler:
         for x in dtuples:
             result.append(WarehouseHandler().buildBestSupplier(x))
         return jsonify(result)
+
+    def GetMostSuppliers(self, w_id):
+        #uDAO = UserDAO()
+        dao = warehouseDAO()
+        if not dao.getWarehouseById(w_id):
+            return jsonify(Error = "Warehouse doesn't exist"), 404
+        #if not uDAO.inWarehouse(data['u_id'], w_id):
+            #return jsonify(Error="User not part of warehouse"), 400
+        ##dao = warehouseDAO()
+        dtuples = dao.getMostSuppliers(w_id)
+        result = []
+        for x in dtuples:
+            result.append(WarehouseHandler().buildBestSupplier(x))
+        return jsonify(result)
     def getProfit(self, w_id, data):
         uDAO = UserDAO()
         dao = warehouseDAO()
@@ -204,6 +256,19 @@ class WarehouseHandler:
         result = []
         for x in dtuples:
             result.append(x)
+        return jsonify(profit=result)
+
+    def GetProfit(self, w_id):
+        uDAO = UserDAO()
+        dao = warehouseDAO()
+        if not dao.getWarehouseById(w_id):
+            return jsonify(Error="Warehouse doesn't exist"), 404
+        #dao = warehouseDAO()
+        dtuples = dao.getProfit(w_id)
+        result = []
+        for x in dtuples:
+            result.append(x)
+            print(result)
         return jsonify(profit=result)
     def getLeastTransactions(self, w_id, data):
         uDAO = UserDAO()
@@ -218,6 +283,19 @@ class WarehouseHandler:
             result.append(WarehouseHandler().buildLeastTransactions(x))
         return jsonify(LowestCostsByDay=result)
 
+    def GetLeastTransactions(self, w_id):
+        #uDAO = UserDAO()
+        dao = warehouseDAO()
+        if not dao.getWarehouseById(w_id):
+            return jsonify(Error="Warehouse doesn't exist"), 404
+        # if not uDAO.inWarehouse(data['u_id'], w_id):
+        #     return jsonify(Error="User not part of warehouse"), 400
+        dtuples = dao.getLeastTransactions(w_id)
+        result = []
+        for x in dtuples:
+            result.append(WarehouseHandler().buildLeastTransactions(x))
+        return jsonify(LowestCostsByDay=result)
+
     def getReceivesMost(self, w_id, data):
         uDAO = UserDAO()
         dao = warehouseDAO()
@@ -225,6 +303,19 @@ class WarehouseHandler:
             return jsonify(Error="Warehouse doesn't exist"), 404
         if not uDAO.inWarehouse(data['u_id'], w_id):
             return jsonify(Error="User not part of warehouse"), 400
+        dtuples = dao.getReceivesMost(w_id)
+        result = []
+        for x in dtuples:
+            result.append(WarehouseHandler().buildReceivesMost(x))
+        return jsonify(UsersThatRecieveMost=result)
+
+    def GetReceivesMost(self, w_id):
+        uDAO = UserDAO()
+        dao = warehouseDAO()
+        if not dao.getWarehouseById(w_id):
+            return jsonify(Error="Warehouse doesn't exist"), 404
+        # if not uDAO.inWarehouse(data['u_id'], w_id):
+        #     return jsonify(Error="User not part of warehouse"), 400
         dtuples = dao.getReceivesMost(w_id)
         result = []
         for x in dtuples:
