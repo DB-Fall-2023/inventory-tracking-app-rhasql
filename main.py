@@ -31,7 +31,7 @@ def runVoilaNotebooks():
         port = 8020
         for notebook in notebooks:
             nPath = os.path.join(path, notebook)
-            command = ['voila', '--port=', 'no-browser', + str(port), nPath,
+            command = ['voila', '--no-browser', '--port=' + str(port), nPath,
                     '--Voila.tornado_settings={"headers": {"Content-Security-Policy": "frame-ancestors *"}}']
             Popen(command)
             port = port + 1
