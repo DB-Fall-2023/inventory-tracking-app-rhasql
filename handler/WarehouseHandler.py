@@ -256,7 +256,7 @@ class WarehouseHandler:
         result = []
         for x in dtuples:
             result.append(x)
-        return jsonify(profit=result)
+        return jsonify(profit_2023=result)
 
     def GetProfit(self, w_id):
         uDAO = UserDAO()
@@ -269,7 +269,7 @@ class WarehouseHandler:
         for x in dtuples:
             result.append(x)
             print(result)
-        return jsonify(profit=result)
+        return jsonify(profit_2023=result)
     def getLeastTransactions(self, w_id, data):
         uDAO = UserDAO()
         dao = warehouseDAO()
