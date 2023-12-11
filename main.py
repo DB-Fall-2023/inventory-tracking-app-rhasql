@@ -41,7 +41,7 @@ def runVoilaNotebooks():
 @app.route('/')
 def greeting():
     #Popen(['voila', 'JupyterNotebooks/warehouseProfit.ipynb'])
-    return render_template('dashboard.html')
+    #return render_template('dashboard.html')
 @app.route('/rhasql')
 def mainpage():
     return 'This is a DB test'  # left for testing purposes
