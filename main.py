@@ -41,7 +41,7 @@ def runVoilaNotebooks():
 @app.route('/')
 def greeting():
     #Popen(['voila', 'JupyterNotebooks/warehouseProfit.ipynb'])
-    return render_template('test.html')
+    return render_template('dashboard.html')
 @app.route('/rhasql')
 def mainpage():
     return 'This is a DB test'  # left for testing purposes
@@ -329,7 +329,7 @@ def getMostRacks():
 @app.route('/rhasql/partPrice', methods=['GET'])
 def getAllPrice():
      if request.method == 'GET':
-         return render_template('templates/test.html')
+         return render_template('templates/dashboard.html')
      else: #catches any other methods
          return jsonify(Error="Method not allowed"), 405
 @app.route('/rhasql/warehouse/AllTransactions/<int:w_id>')
