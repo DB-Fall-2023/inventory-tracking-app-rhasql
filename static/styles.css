@@ -1,63 +1,97 @@
-.first-frame {
-    width: 65%;
-    height: 1000px;
-    border-radius: 20px;
-    box-shadow: 10px 10px;
+/* Reset some default styles */
+body, h1, h2, h3, p, ul, ol, li, figure, figcaption, blockquote, dl, dd {
+    margin: 0;
+    padding: 0;
 }
 
-.navbar {
-    height: 71px;
-    width: 100%;
-    background-color: #989da6;
-    border-radius: 25px;
-    padding-left: 0.25rem;
-    padding-right: 0.25rem;
-    display: flex;
-}
-
-.navbar-h1 {
-    margin-bottom: 20px;
-    margin-left: 30px;
-}
-
-.navbar a {
-    margin-top: 1.5rem;
-    margin-right: 1.5rem;
+/* Apply a box-sizing border-box model globally */
+* {
+    box-sizing: border-box;
 }
 
 body {
-    background-color: #d0d1d3;
+    font-family: 'Arial', sans-serif;
+    background-color: #0000;
+}
+
+.navbar {
+    height: 120px;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-h1 {
+    margin-left: 20px;
+    font-size: 2.4rem;
+    color: #333;
 }
 
 .navbar-img {
     width: 50px;
     height: 50px;
-    margin-left: 20px;
-    margin-top: 10px;
-    box-shadow: 10px 10px;
+    margin-right: 10px; /* Add some spacing between the image and text */
+}
+
+.navbar a {
+    text-decoration: none;
+    color: #555;
+    margin-right: 20px;
+    font-weight: bold;
 }
 
 .global-stats {
-    margin-left: 15%;
+    margin: 10px 0; /* Updated margin for more separation */
 }
 
 .dropdown-global {
-    margin-left: 15%;
-    background-color: whitesmoke;
-    width: 55%;
-    border-radius: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    text-align: center; /* Center-align the text */
+}
+
+label.global-text {
     margin-bottom: 10px;
-    box-shadow: 10px 10px;
+    display: block; /* Ensure the label is treated as a block element */
+}
+
+#pageSelector {
+    margin: 0 auto; /* Center-align the select element */
+    margin-bottom: 20px;
+}
+
+#pageSelector2 {
+    margin: 0 auto; /* Center-align the select element */
+    margin-bottom: 20px;
 }
 
 .global-text {
-    margin-left: 20px;
+    margin: 20px 0;
+    text-align: center;
+    font-size: 1.8rem; /* Updated font size to be twice as big */
+    color: #333;
 }
 
 label .global-text {
     margin-bottom: 10px;
 }
 
+.first-frame {
+    width: 100%;
+    height: 600px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 .stats {
-    margin-bottom: 10%;
+    margin-bottom: 5%;
 }
