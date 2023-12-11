@@ -19,29 +19,30 @@ app = Flask(__name__)
 CORS(app)
 
 ran = False
-@app.before_request
-def runVoilaNotebooks():
-    global ran
-    if not ran:
-        currentFolder = os.path.dirname(os.path.abspath(__file__))
-        notebooksFolder = 'JupyterNotebooks'
-        path = os.path.join(currentFolder, notebooksFolder)
-        files = os.listdir(path)
-        notebooks = [file for file in files if file.endswith('.ipynb')]
-        port = 8020
-        for notebook in notebooks:
-            nPath = os.path.join(path, notebook)
-            command = ['voila', '--no-browser', '--port=' + str(port), nPath,
-                    '--Voila.tornado_settings={"headers": {"Content-Security-Policy": "frame-ancestors *"}}']
-            Popen(command)
-            port = port + 1
-    ran = True
+#@app.before_request
+#def runVoilaNotebooks():
+    #global ran
+    #if not ran:
+        #currentFolder = os.path.dirname(os.path.abspath(__file__))
+        #notebooksFolder = 'JupyterNotebooks'
+        #path = os.path.join(currentFolder, notebooksFolder)
+        #files = os.listdir(path)
+        #notebooks = [file for file in files if file.endswith('.ipynb')]
+        #port = 8020
+        #for notebook in notebooks:
+            #nPath = os.path.join(path, notebook)
+            #command = ['voila', '--no-browser', '--port=' + str(port), nPath,
+                    #'--Voila.tornado_settings={"headers": {"Content-Security-Policy": "frame-ancestors *"}}']
+            #Popen(command)
+            #port = port + 1
+    #ran = True
 
 
 @app.route('/')
 def greeting():
     #Popen(['voila', 'JupyterNotebooks/warehouseProfit.ipynb'])
     #return render_template('dashboard.html')
+    return "Welcome"
 @app.route('/rhasql')
 def mainpage():
     return 'This is a DB test'  # left for testing purposes
