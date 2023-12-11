@@ -19,22 +19,22 @@
 
     <label for="pageSelector" class="global-text">Select a graph to display:</label>
     <select id="pageSelector" onchange="changePage()">
-        <option value="http://localhost:8006/">Most Rack</option>
-        <option value="http://localhost:8005/">Most Incoming</option>
-        <option value="http://localhost:8004/">Most Deliver</option>
-        <option value="http://localhost:8007/">Most Transaction</option>
-        <option value="http://localhost:8001/">Least Outgoing</option>
-        <option value="http://localhost:8003/">Most City</option>
-        <option value="http://localhost:8008/">All Parts</option>
-        <option value="http://localhost:8009/">Parts Supplied</option>
-        <option value="http://localhost:8000/">Transaction</option>
+        <option value="http://localhost:8026/">Most Rack</option>
+        <option value="http://localhost:8025/">Most Incoming</option>
+        <option value="http://localhost:8024/">Most Deliver</option>
+        <option value="http://localhost:8027/">Most Transaction</option>
+        <option value="http://localhost:8022/">Least Outgoing</option>
+        <option value="http://localhost:8023/">Most City</option>
+        <option value="http://localhost:8028/">All Parts</option>
+        <option value="http://localhost:8029/">Parts Supplied</option>
+        <option value="http://localhost:8020/">Transaction</option>
     </select>
 </div>
 <div class="global-stats">
     <iframe id="embeddedPage" src=""  class="first-frame" frameborder="0"></iframe>
 </div>
     <script>
-        var defaultPage = "http://localhost:8006";
+        var defaultPage = "http://localhost:8026";
         var iframe = document.getElementById("embeddedPage");
         iframe.src = defaultPage;
 
@@ -51,14 +51,14 @@
 
     <label for="pageSelector2" class="global-text">Select a graph to display:</label>
     <select id="pageSelector2" onchange="changePage2()">
-        <option value="http://localhost:8016/">Warehouse Year Profit</option>
-        <option value="http://localhost:8012/">Low Stock</option>
-        <option value="http://localhost:8001/">Bottom 3</option>
-        <option value="http://localhost:8011/">Expensive</option>
-        <option value="http://localhost:8014/">Supplier</option>
-        <option value="http://localhost:8013/">Least Cost</option>
-        <option value="http://localhost:8015/">Receives Most</option>
-        <option value="http://localhost:8010/">Parts in Warehouse</option>
+        <option value="http://localhost:8036/">Warehouse Year Profit</option>
+        <option value="http://localhost:8032/">Low Stock</option>
+        <option value="http://localhost:8021/">Bottom 3</option>
+        <option value="http://localhost:8031/">Expensive</option>
+        <option value="http://localhost:8034/">Supplier</option>
+        <option value="http://localhost:8033/">Least Cost</option>
+        <option value="http://localhost:8035/">Receives Most</option>
+        <option value="http://localhost:8030/">Parts in Warehouse</option>
     </select>
 </div>
     <div class="global-stats">
@@ -66,7 +66,7 @@
     </div>
     <script>
         // Set the default page to Example.com
-        var defaultPage2 = "http://localhost:8016";
+        var defaultPage2 = "http://localhost:8036";
         var iframe2 = document.getElementById("embeddedPage2");
         iframe2.src = defaultPage2;
 

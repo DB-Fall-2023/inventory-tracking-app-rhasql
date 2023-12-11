@@ -28,10 +28,10 @@ def runVoilaNotebooks():
         path = os.path.join(currentFolder, notebooksFolder)
         files = os.listdir(path)
         notebooks = [file for file in files if file.endswith('.ipynb')]
-        port = 8000
+        port = 8020
         for notebook in notebooks:
             nPath = os.path.join(path, notebook)
-            command = ['voila','--no-browser', '--port=' + str(port), nPath,
+            command = ['voila', '--port=' + str(port), nPath,
                     '--Voila.tornado_settings={"headers": {"Content-Security-Policy": "frame-ancestors *"}}']
             Popen(command)
             port = port + 1
