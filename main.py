@@ -40,7 +40,7 @@ def runVoilaNotebooks():
 
 @app.route('/')
 def greeting():
-    Popen(['voila', 'JupyterNotebooks/warehouseProfit.ipynb'])
+    #Popen(['voila', 'JupyterNotebooks/warehouseProfit.ipynb'])
     return render_template('test.html')
 @app.route('/rhasql')
 def mainpage():
